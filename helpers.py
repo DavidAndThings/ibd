@@ -2,6 +2,7 @@ import tempfile
 import pandas as pd
 import numpy as np
 from tqdm import tqdm, trange
+import subprocess
 
 
 class TempFileManager:
@@ -68,6 +69,26 @@ def convert_haps(hap_addr, size, dim, id_list, output_addr):
                 output.write('{} {} '.format(haps[2 * i, j], haps[2 * i + 1, j]))
 
             output.write('{} {}\n'.format(haps[2 * i, haps.shape[1] - 1], haps[2 * i + 1, haps.shape[1] - 1]))
+
+
+def run_ilash(ped_addr, map_addr, match_addr):
+
+    ilash_config = pd.DataFrame([
+        [
+            "map", "ped", "output", "slice_size", "step_size", "perm_count", "shingle_size",
+            "shingle_overlap", "bucket_count", "max_thread", "match_threshold", "interest_threshold",
+            "min_length", "auto_slice", "slice_length", "cm_overlap", "minhash_threshold"
+        ],
+        [
+            map_addr, ped_addr, match_addr, 350, 350, 20, 15, 0, 5, 20, 0.99, 0.70, 2.9, 1,
+            2.9, 1, 55
+        ]
+    ])
+
+    with tempfile.NamedTemporaryFile(mode="w") as ilash_config_file:
+
+        ilash_config.to_csv(ilash_config_file.name, index=False, header=False, sep=" ")
+        subprocess.run(["./ilash", ilash_config_file.name], check=True)
 
 
 def count_lines_in_file(file_addr):

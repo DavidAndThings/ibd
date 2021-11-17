@@ -20,7 +20,10 @@ def build_parser():
     subparsers = master_parser.add_subparsers(dest="tool", title="IBD tools")
 
     convert_parser = subparsers.add_parser("convert", help="A sets of tools to convert various types of files.")
+    ilash_parser = subparsers.add_parser("ilash", help="Tool to run the ilash program.")
+
     build_convert_parser(convert_parser)
+    build_ilash_parser(ilash_parser)
 
     return master_parser
 
@@ -36,11 +39,20 @@ def build_convert_parser(convert_parser):
         "--fam", "-f", required=True, type=str, metavar="path_to_fam_file", help="Path to the output .fam file.")
 
     haps_parser = subparsers.add_parser("haps", help="This tool converts a .haps file into a .ped file.")
+
     haps_parser.add_argument(
         "--haps", required=True, type=str, metavar="path_to_haps_file", help="Path to a .haps file.")
     haps_parser.add_argument(
-        "--fam", "-f", required=True, type=str, metavar="path_to_fam_file", help="Path to a .fam file."
-    )
+        "--fam", "-f", required=True, type=str, metavar="path_to_fam_file", help="Path to a .fam file.")
     haps_parser.add_argument(
-        "--ped", required=True, type=str, metavar="path_to_ped_file", help="Path to the output ped file."
-    )
+        "--ped", required=True, type=str, metavar="path_to_ped_file", help="Path to the output ped file.")
+
+
+def build_ilash_parser(ilash_parser):
+
+    ilash_parser.add_argument(
+        "--map", "-m", required=True, type=str, metavar="path", help="Path to a .map genetic map file.")
+    ilash_parser.add_argument(
+        "--ped", "-p", required=True, type=str, metavar="path", help="Path to a .ped file.")
+    ilash_parser.add_argument(
+        "--output", "-o", required=True, type=str, metavar="path", help="Path to the output .match file.")

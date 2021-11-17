@@ -8,8 +8,10 @@ if __name__ == '__main__':
 
     sample_conv = SampleConvertHandler()
     haps_conv = HapsConvertHandler()
+    ilash_run = ILASHHandler()
 
     sample_conv.set_next(haps_conv)
+    haps_conv.set_next(ilash_run)
 
     args = p.parse_args()
     sample_conv.handle(args)
