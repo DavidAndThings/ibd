@@ -24,7 +24,7 @@ class TempFileManager:
 
 def sample_to_fam(sample_addr, fam_addr):
 
-    sample_table = pd.read_table(sample_addr, sep=" ")
+    sample_table = pd.read_table(sample_addr, sep=" ", skiprows=[1])
     fam_table = sample_table.drop(["missing"], axis=1)
     fam_table.to_csv(fam_addr, header=False, sep="\t", index=False)
 
@@ -76,7 +76,7 @@ def count_lines_in_file(file_addr):
 
         counter = 0
 
-        for line in tqdm(f):
+        for line in tqdm(f, desc="Counting columns"):
 
             if line != "\n":
                 counter += 1
