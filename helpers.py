@@ -85,6 +85,8 @@ def run_ilash(ped_addr, map_addr, match_addr):
         ]
     ])
 
+    print(ilash_config)
+
     with tempfile.NamedTemporaryFile(mode="w") as ilash_config_file:
 
         ilash_config.to_csv(ilash_config_file.name, index=False, header=False, sep=" ")
