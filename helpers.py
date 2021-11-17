@@ -26,7 +26,7 @@ def sample_to_fam(sample_addr, fam_addr):
 
     sample_table = pd.read_table(sample_addr, sep=" ")
     fam_table = sample_table.drop(["missing"], axis=1)
-    fam_table.to_csv(fam_addr, header=False, sep="\t")
+    fam_table.to_csv(fam_addr, header=False, sep="\t", index=False)
 
 
 def haps_to_ped(haps_addr, fam_addr, ped_addr):
