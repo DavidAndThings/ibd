@@ -17,7 +17,7 @@ def build_parser():
         description="IGH IBD pipeline."
     )
 
-    subparsers = master_parser.add_subparsers(dest="tool", required=True, title="IBD tools")
+    subparsers = master_parser.add_subparsers(dest="tool", title="IBD tools")
 
     convert_parser = subparsers.add_parser("convert", help="A sets of tools to convert various types of files.")
     build_convert_parser(convert_parser)
@@ -27,7 +27,7 @@ def build_parser():
 
 def build_convert_parser(convert_parser):
 
-    subparsers = convert_parser.add_subparsers(dest="type", required=True, title="File types")
+    subparsers = convert_parser.add_subparsers(dest="type", title="File types")
 
     sample_parser = subparsers.add_parser("sample", help="This tool converts a .sample file into a plink .fam file.")
     sample_parser.add_argument(
