@@ -73,19 +73,16 @@ def convert_haps(hap_addr, size, dim, id_list, output_addr):
 
 def run_ilash(ped_addr, map_addr, match_addr):
 
-    ilash_config = pd.DataFrame([
+    ilash_config = pd.DataFrame(
         [
-            "map", "ped", "output", "slice_size", "step_size", "perm_count", "shingle_size",
-            "shingle_overlap", "bucket_count", "max_thread", "match_threshold", "interest_threshold",
-            "min_length", "auto_slice", "slice_length", "cm_overlap", "minhash_threshold"
-        ],
-        [
-            map_addr, ped_addr, match_addr, 350, 350, 20, 15, 0, 5, 20, 0.99, 0.70, 2.9, 1,
-            2.9, 1, 55
+            ["map", map_addr], ["ped", ped_addr], ["output", match_addr],
+            ["slice_size", 350], ["step_size", 350], ["perm_count", 20],
+            ["shingle_size", 15], ["shingle_overlap", 0], ["bucket_count", 5],
+            ["max_thread", 20], ["match_threshold", 0.99], ["interest_threshold", 0.70],
+            ["min_length", 2.9], ["auto_slice", 1], ["slice_length", 2.9],
+            ["cm_overlap", 1], ["minhash_threshold", 55]
         ]
-    ])
-
-    print(ilash_config)
+    )
 
     with tempfile.NamedTemporaryFile(mode="w") as ilash_config_file:
 
