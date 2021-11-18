@@ -96,11 +96,14 @@ def build_map_file(haps_addr, dist_addr, output_addr):
 
         map_data = []
 
-        for line in tqdm(haps_file, desc="Extracting first 3 columns of the .map file"):
+        for line in tqdm(haps_file, desc="Extracting the first 3 columns of the .map file"):
             map_data.append(line.split()[0:3])
 
         map_table = pd.DataFrame(map_data, columns=["chr", "id", "pos"])
         dist_table = pd.read_table(dist_addr, header=0, sep=" ")
+
+        print(map_table)
+        print(dist_table)
         map_table = pd.merge(map_table, dist_table, how="left", left_on="pos", right_on="position")
         map_table[["chr", "id", "Genetic_Map(cM)", "pos"]].to_csv(output_addr, header=False, index=False, sep="\t")
 
