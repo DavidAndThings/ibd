@@ -90,7 +90,7 @@ def run_ilash(ped_addr, map_addr, match_addr):
         subprocess.run(["./ilash", ilash_config_file.name], check=True)
 
 
-def build_map_file(haps_addr, dist_addr, output_addr):
+def build_map_file(haps_addr, dist_addr, output_addr, chr):
 
     with open(haps_addr, mode="r") as haps_file:
 
@@ -99,12 +99,22 @@ def build_map_file(haps_addr, dist_addr, output_addr):
         for line in tqdm(haps_file, desc="Extracting the first 3 columns of the .map file"):
             map_data.append(line.split()[0:3])
 
+        query_file = tempfile.NamedTemporaryFile(mode="w")
+
         map_table = pd.DataFrame(map_data, columns=["chr", "id", "pos"])
         map_table["pos"] = pd.to_numeric(map_table["pos"])
-        query_file = tempfile.NamedTemporaryFile(mode="w")
         map_table[["id", "pos"]].to_csv(query_file.name, sep="\t", header=False, index=False)
 
-        interpolate_map(query_file.name, dist_addr, output_addr)
+        dist_file = tempfile.NamedTemporaryFile(mode="w")
+
+        dist_table = pd.read_table(dist_addr, sep=" ")
+        dist_table["id"] = chr + dist_table["position"].astype(str)
+        dist_table[["id", "position", "Genetic_Map(cM)"]].to_csv(dist_file.name, sep="\t", header=False, index=False)
+
+        interpolate_map(query_file.name, dist_file.name, output_addr)
+
+        dist_file.close()
+        query_file.close()
 
 
 def count_lines_in_file(file_addr):
@@ -132,10 +142,10 @@ def count_columns_in_file(file_addr, sep):
 def interpolate_map(query_addr, gene_map_addr, output_addr):
 
     query_data = np.loadtxt(
-        query_addr, dtype={'names': ['RSID', 'position'], 'formats': ['S20', 'i8']})
+        query_addr, dtype={'names': ['RSID', 'position'], 'formats': ['S20', 'i8']}, delimiter='\t')
 
     gen_data = np.loadtxt(gene_map_addr, dtype={
-        'names': ['RSID', 'position', 'gen_dist'], 'formats': ['S20', 'i8', 'f8']}, skiprows=1)
+        'names': ['RSID', 'position', 'gen_dist'], 'formats': ['S20', 'i8', 'f8']}, delimiter='\t')
 
     gen_dict = {}
 
