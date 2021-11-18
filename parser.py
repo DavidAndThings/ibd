@@ -36,7 +36,7 @@ def build_convert_parser(convert_parser):
     sample_parser.add_argument(
         "--sample", "-s", required=True, type=str, metavar="path_to_sample_file", help="Path to a .sample file.")
     sample_parser.add_argument(
-        "--fam", "-f", required=True, type=str, metavar="path_to_fam_file", help="Path to the output .fam file.")
+        "--output", "-o", required=True, type=str, metavar="path_to_fam_file", help="Path to the output .fam file.")
 
     haps_parser = subparsers.add_parser("haps", help="This tool converts a .haps file into a .ped file.")
 
@@ -45,7 +45,16 @@ def build_convert_parser(convert_parser):
     haps_parser.add_argument(
         "--fam", "-f", required=True, type=str, metavar="path_to_fam_file", help="Path to a .fam file.")
     haps_parser.add_argument(
-        "--ped", required=True, type=str, metavar="path_to_ped_file", help="Path to the output ped file.")
+        "--output", "-o", required=True, type=str, metavar="path_to_ped_file", help="Path to the output ped file.")
+
+    dist_parser = subparsers.add_parser(
+        "dist", help="This tool builds a plink .map file from a .haps and a genetic distance file")
+    dist_parser.add_argument(
+        "--dist", required=True, type=str, metavar="path", help="Path to a genetic distance file.")
+    dist_parser.add_argument(
+        "--haps", required=True, type=str, metavar="path", help="Path to a .haps file.")
+    dist_parser.add_argument(
+        "--output", "-o", required=True, type=str, metavar="path", help="Path to the output .map file.")
 
 
 def build_ilash_parser(ilash_parser):

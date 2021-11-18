@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from helpers import sample_to_fam, haps_to_ped, run_ilash
+from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file
 
 
 class CommandHandler(ABC):
@@ -38,6 +38,17 @@ class HapsConvertHandler(CommandHandler):
 
         if request.tool == "convert" and request.type == "haps":
             haps_to_ped(request.haps, request.fam, request.ped)
+
+        elif self.has_next():
+            self.get_next().handle(request)
+
+
+class DistConvertHandler(CommandHandler):
+
+    def handle(self, request):
+
+        if request.tool == "convert" and request.type == "dist":
+            build_map_file(request.haps, request.dist, request.output)
 
         elif self.has_next():
             self.get_next().handle(request)
