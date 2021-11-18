@@ -100,6 +100,7 @@ def build_map_file(haps_addr, dist_addr, output_addr):
             map_data.append(line.split()[0:3])
 
         map_table = pd.DataFrame(map_data, columns=["chr", "id", "pos"])
+        map_table["pos"] = pd.to_numeric(map_table["pos"])
         dist_table = pd.read_table(dist_addr, header=0, sep=" ")
 
         print(map_table)
