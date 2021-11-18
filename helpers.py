@@ -102,7 +102,7 @@ def build_map_file(haps_addr, dist_addr, output_addr):
         map_table = pd.DataFrame(map_data, columns=["chr", "id", "pos"])
         map_table["pos"] = pd.to_numeric(map_table["pos"])
         query_file = tempfile.NamedTemporaryFile(mode="w")
-        map_table.to_csv(query_file.name, sep="\t", header=False, index=False)
+        map_table[["id", "pos"]].to_csv(query_file.name, sep="\t", header=False, index=False)
 
         interpolate_map(query_file.name, dist_addr, output_addr)
 
@@ -146,7 +146,7 @@ def interpolate_map(query_addr, gene_map_addr, output_addr):
     temp_dist = 0
 
     with open(output_addr, 'w') as outputFile:
-        for queryItem in query_data:
+        for queryItem in tqdm(query_data, desc="Interpolating the .map file"):
             if queryItem[1] in gen_dict:
                 temp_dist = gen_data[gen_dict[queryItem[1]]][2]
                 last_index = gen_dict[queryItem[1]]
