@@ -103,8 +103,6 @@ def build_map_file(haps_addr, dist_addr, output_addr):
         map_table["pos"] = pd.to_numeric(map_table["pos"])
         dist_table = pd.read_table(dist_addr, header=0, sep=" ")
 
-        print(map_table)
-        print(dist_table)
         map_table = pd.merge(map_table, dist_table, how="left", left_on="pos", right_on="position")
         map_table[["chr", "id", "Genetic_Map(cM)", "pos"]].to_csv(output_addr, header=False, index=False, sep="\t")
 
