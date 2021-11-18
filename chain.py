@@ -48,7 +48,7 @@ class DistConvertHandler(CommandHandler):
     def handle(self, request):
 
         if request.tool == "convert" and request.type == "dist":
-            build_map_file(request.haps, request.dist, request.output)
+            build_map_file(request.haps, request.dist, request.output, request.chr)
 
         elif self.has_next():
             self.get_next().handle(request)

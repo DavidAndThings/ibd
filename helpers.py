@@ -90,7 +90,7 @@ def run_ilash(ped_addr, map_addr, match_addr):
         subprocess.run(["./ilash", ilash_config_file.name], check=True)
 
 
-def build_map_file(haps_addr, dist_addr, output_addr, chr):
+def build_map_file(haps_addr, dist_addr, output_addr, chrom):
 
     with open(haps_addr, mode="r") as haps_file:
 
@@ -108,7 +108,7 @@ def build_map_file(haps_addr, dist_addr, output_addr, chr):
         dist_file = tempfile.NamedTemporaryFile(mode="w")
 
         dist_table = pd.read_table(dist_addr, sep=" ")
-        dist_table["id"] = chr + dist_table["position"].astype(str)
+        dist_table["id"] = chrom + dist_table["position"].astype(str)
         dist_table[["id", "position", "Genetic_Map(cM)"]].to_csv(dist_file.name, sep="\t", header=False, index=False)
 
         interpolate_map(query_file.name, dist_file.name, output_addr)
