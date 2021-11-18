@@ -101,10 +101,10 @@ def build_map_file(haps_addr, dist_addr, output_addr):
 
         map_table = pd.DataFrame(map_data, columns=["chr", "id", "pos"])
         map_table["pos"] = pd.to_numeric(map_table["pos"])
-        dist_table = pd.read_table(dist_addr, header=0, sep=" ")
+        query_file = tempfile.NamedTemporaryFile(mode="w")
+        map_table.to_csv(query_file.name, sep="\t", header=False, index=False)
 
-        map_table = pd.merge(map_table, dist_table, how="left", left_on="pos", right_on="position")
-        map_table[["chr", "id", "Genetic_Map(cM)", "pos"]].to_csv(output_addr, header=False, index=False, sep="\t")
+        interpolate_map(query_file.name, dist_addr, output_addr)
 
 
 def count_lines_in_file(file_addr):
@@ -127,3 +127,41 @@ def count_columns_in_file(file_addr, sep):
 
         line = f.readline()
         return len(line.strip().split(sep))
+
+
+def interpolate_map(query_addr, gene_map_addr, output_addr):
+
+    query_data = np.loadtxt(
+        query_addr, dtype={'names': ['RSID', 'position'], 'formats': ['S20', 'i8']})
+
+    gen_data = np.loadtxt(gene_map_addr, dtype={
+        'names': ['RSID', 'position', 'gen_dist'], 'formats': ['S20', 'i8', 'f8']})
+
+    gen_dict = {}
+
+    for i in range(gen_data.shape[0]):
+        gen_dict[gen_data[i][1]] = i
+
+    last_index = 0
+    temp_dist = 0
+
+    with open(output_addr, 'w') as outputFile:
+        for queryItem in query_data:
+            if queryItem[1] in gen_dict:
+                temp_dist = gen_data[gen_dict[queryItem[1]]][2]
+                last_index = gen_dict[queryItem[1]]
+            else:
+                temp_dist, last_index = find_head(gen_data, last_index, queryItem[1])
+            outputFile.write(' '.join([chr, str(queryItem[0]), str(temp_dist), str(queryItem[1])]) + '\n')
+
+
+def find_head(gen_data, index, position):
+
+    while index < gen_data.shape[0] and gen_data[index][1] < position:
+        index += 1
+
+    result = (position - gen_data[index - 1][1]) * (gen_data[index - 1][2] - gen_data[index - 2][2]) / \
+             (gen_data[index - 1][1] - gen_data[index - 2][1])
+
+    return result + gen_data[index - 1][2], index - 1
+
