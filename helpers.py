@@ -90,7 +90,7 @@ def run_ilash(ped_addr, map_addr, match_addr):
         subprocess.run(["./ilash", ilash_config_file.name], check=True)
 
 
-def build_map_file(haps_addr, dist_addr, output_addr, chrom):
+def build_map_file(haps_addr, dist_addr, chrom, output_addr):
 
     with open(haps_addr, mode="r") as haps_file:
 
@@ -111,7 +111,7 @@ def build_map_file(haps_addr, dist_addr, output_addr, chrom):
         dist_table["id"] = chrom + dist_table["position"].astype(str)
         dist_table[["id", "position", "Genetic_Map(cM)"]].to_csv(dist_file.name, sep="\t", header=False, index=False)
 
-        interpolate_map(query_file.name, dist_file.name, output_addr)
+        interpolate_map(query_file.name, dist_file.name, chrom, output_addr)
 
         dist_file.close()
         query_file.close()
@@ -139,7 +139,7 @@ def count_columns_in_file(file_addr, sep):
         return len(line.strip().split(sep))
 
 
-def interpolate_map(query_addr, gene_map_addr, output_addr):
+def interpolate_map(query_addr, gene_map_addr, chrom, output_addr):
 
     query_data = np.loadtxt(
         query_addr, dtype={'names': ['RSID', 'position'], 'formats': ['S20', 'i8']}, delimiter='\t')
@@ -162,7 +162,7 @@ def interpolate_map(query_addr, gene_map_addr, output_addr):
                 last_index = gen_dict[queryItem[1]]
             else:
                 temp_dist, last_index = find_head(gen_data, last_index, queryItem[1])
-            outputFile.write(' '.join([chr, str(queryItem[0]), str(temp_dist), str(queryItem[1])]) + '\n')
+            outputFile.write(' '.join([chrom, str(queryItem[0]), str(temp_dist), str(queryItem[1])]) + '\n')
 
 
 def find_head(gen_data, index, position):
