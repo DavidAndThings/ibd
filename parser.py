@@ -54,6 +54,8 @@ def build_convert_parser(convert_parser):
     dist_parser.add_argument(
         "--haps", required=True, type=str, metavar="path", help="Path to a .haps file.")
     dist_parser.add_argument(
+        "--chr", required=True, type=str, metavar="path", help="The chromosome for which the input files have info.")
+    dist_parser.add_argument(
         "--output", "-o", required=True, type=str, metavar="path", help="Path to the output .map file.")
 
 
