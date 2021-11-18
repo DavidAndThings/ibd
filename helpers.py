@@ -135,7 +135,7 @@ def interpolate_map(query_addr, gene_map_addr, output_addr):
         query_addr, dtype={'names': ['RSID', 'position'], 'formats': ['S20', 'i8']})
 
     gen_data = np.loadtxt(gene_map_addr, dtype={
-        'names': ['RSID', 'position', 'gen_dist'], 'formats': ['S20', 'i8', 'f8']}, skiprows=0)
+        'names': ['RSID', 'position', 'gen_dist'], 'formats': ['S20', 'i8', 'f8']}, skiprows=1)
 
     gen_dict = {}
 
