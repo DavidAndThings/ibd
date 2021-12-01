@@ -174,4 +174,3 @@ def find_head(gen_data, index, position):
              (gen_data[index - 1][1] - gen_data[index - 2][1])
 
     return result + gen_data[index - 1][2], index - 1
-

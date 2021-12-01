@@ -21,9 +21,11 @@ def build_parser():
 
     convert_parser = subparsers.add_parser("convert", help="A sets of tools to convert various types of files.")
     ilash_parser = subparsers.add_parser("ilash", help="Tool to run the ilash program.")
+    qc_parser = subparsers.add_parser("qc", help="Tool to filter out bad ilash matches.")
 
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
+    build_qc_parser(qc_parser)
 
     return master_parser
 
@@ -67,3 +69,21 @@ def build_ilash_parser(ilash_parser):
         "--ped", "-p", required=True, type=str, metavar="path", help="Path to a .ped file.")
     ilash_parser.add_argument(
         "--output", "-o", required=True, type=str, metavar="path", help="Path to the output .match file.")
+
+
+def build_qc_parser(qc_parser):
+
+    qc_parser.add_argument(
+        "--match", required=True, type=str, metavar="path",
+        help="Path to a .match file produced by the ilash program"
+    )
+
+    qc_parser.add_argument(
+        "--map", required=True, type=str, metavar="path", help="Path to a .map file containing the phased genotype data")
+
+    qc_parser.add_argument(
+        "--chromosome", "-c", required=True, type=str, metarvar="code", help="The chromosome code of interest.")
+
+    qc_parser.add_argument(
+        "--output", "-o", required=True, type=str, metavar="path", help="The filtered match file."
+    )

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file
+from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file, TempFileManager
+from qc import remove_segments, get_exclusions
 
 
 class CommandHandler(ABC):
@@ -63,3 +64,20 @@ class ILASHHandler(CommandHandler):
 
         elif self.has_next():
             self.get_next().handle(request)
+
+
+class QcHandler(CommandHandler):
+
+    def handle(self, request):
+
+        if request.tool == "qc":
+
+            manager = TempFileManager()
+            exclusions = manager.get_new_file()
+            get_exclusions(request.chromosome, request.map, request.match, exclusions.name)
+            remove_segments(request.chromosome, request.match, exclusions.name, request.output)
+            manager.purge()
+
+        elif self.has_next():
+            self.get_next().handle(request)
+
