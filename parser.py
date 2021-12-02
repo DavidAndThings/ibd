@@ -85,5 +85,9 @@ def build_qc_parser(qc_parser):
         "--chromosome", "-c", required=True, type=str, metavar="code", help="The chromosome code of interest.")
 
     qc_parser.add_argument(
+        "--identified", "-i", type=str, metavar="path", help="A list of pre-identified regions to remove."
+    )
+
+    qc_parser.add_argument(
         "--output", "-o", required=True, type=str, metavar="path", help="The filtered match file."
     )
