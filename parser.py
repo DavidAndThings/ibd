@@ -82,7 +82,7 @@ def build_qc_parser(qc_parser):
         "--map", required=True, type=str, metavar="path", help="Path to a .map file containing the phased genotype data")
 
     qc_parser.add_argument(
-        "--chromosome", "-c", required=True, type=str, metarvar="code", help="The chromosome code of interest.")
+        "--chromosome", "-c", required=True, type=str, metavar="code", help="The chromosome code of interest.")
 
     qc_parser.add_argument(
         "--output", "-o", required=True, type=str, metavar="path", help="The filtered match file."
