@@ -58,7 +58,7 @@ def get_exclusions(chrom, map_addr, match_addr, output_addr):
     flag = False
     base = -1
 
-    with open(output_addr) as exclusion_file:
+    with open(output_addr, "w") as exclusion_file:
 
         for index, val in tqdm(enumerate(hits), desc="Filtering hits"):
 
