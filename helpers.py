@@ -168,7 +168,12 @@ def interpolate_map(query_addr, gene_map_addr, chrom):
         else:
             temp_dist, last_index = find_head(gen_data, last_index, queryItem[1])
 
-        output_table = output_table.append([chrom, str(queryItem[0]), str(temp_dist), int(queryItem[1])])
+        output_table = output_table.append(
+            {
+                "chr": chrom, "RSID": str(queryItem[0]),
+                "dist": str(temp_dist), "position": int(queryItem[1])
+            }, ignore_index=True)
+
         # outputFile.write(' '.join([chrom, str(queryItem[0]), str(temp_dist), str(queryItem[1])]) + '\n')
 
     return output_table
