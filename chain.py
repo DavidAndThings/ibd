@@ -74,8 +74,8 @@ class QcHandler(CommandHandler):
 
             manager = TempFileManager()
             exclusions = manager.get_new_file()
-            get_exclusions(request.chromosome, request.map, request.match, exclusions.name)
-            remove_segments(request.chromosome, request.match, exclusions.name, request.output)
+            get_exclusions(request.chromosome, request.map, request.match, exclusions)
+            remove_segments(request.chromosome, request.match, exclusions, request.output)
             manager.purge()
 
         elif self.has_next():
