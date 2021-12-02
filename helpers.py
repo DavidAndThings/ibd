@@ -111,7 +111,12 @@ def build_map_file(haps_addr, dist_addr, chrom, output_addr):
         dist_table["id"] = chrom + dist_table["position"].astype(str)
         dist_table[["id", "position", "Genetic_Map(cM)"]].to_csv(dist_file.name, sep="\t", header=False, index=False)
 
-        interpolate_map(query_file.name, dist_file.name, chrom, output_addr)
+        output_table = interpolate_map(query_file.name, dist_file.name, chrom)
+
+        # Sort the position column in ascending order
+        output_table["position"] = pd.to_numeric(output_table["position"])
+        output_table = output_table.sort_values(["position"], ascending=(True,))
+        output_table.to_csv(output_addr, sep='\t', header=False, index=False)
 
         dist_file.close()
         query_file.close()
@@ -139,7 +144,7 @@ def count_columns_in_file(file_addr, sep):
         return len(line.strip().split(sep))
 
 
-def interpolate_map(query_addr, gene_map_addr, chrom, output_addr):
+def interpolate_map(query_addr, gene_map_addr, chrom):
 
     query_data = np.loadtxt(
         query_addr, dtype={'names': ['RSID', 'position'], 'formats': ['S20', 'i8']}, delimiter='\t')
@@ -154,15 +159,19 @@ def interpolate_map(query_addr, gene_map_addr, chrom, output_addr):
 
     last_index = 0
     temp_dist = 0
+    output_table = pd.DataFrame(data=None, columns=["chr", "RSID", "dist", "position"])
 
-    with open(output_addr, 'w') as outputFile:
-        for queryItem in tqdm(query_data, desc="Interpolating the .map file"):
-            if queryItem[1] in gen_dict:
-                temp_dist = gen_data[gen_dict[queryItem[1]]][2]
-                last_index = gen_dict[queryItem[1]]
-            else:
-                temp_dist, last_index = find_head(gen_data, last_index, queryItem[1])
-            outputFile.write(' '.join([chrom, str(queryItem[0]), str(temp_dist), str(queryItem[1])]) + '\n')
+    for queryItem in tqdm(query_data, desc="Interpolating the .map file"):
+        if queryItem[1] in gen_dict:
+            temp_dist = gen_data[gen_dict[queryItem[1]]][2]
+            last_index = gen_dict[queryItem[1]]
+        else:
+            temp_dist, last_index = find_head(gen_data, last_index, queryItem[1])
+
+        output_table.append([chrom, str(queryItem[0]), str(temp_dist), int(queryItem[1])])
+        # outputFile.write(' '.join([chrom, str(queryItem[0]), str(temp_dist), str(queryItem[1])]) + '\n')
+
+    return output_table
 
 
 def find_head(gen_data, index, position):
