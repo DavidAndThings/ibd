@@ -9,10 +9,10 @@ def remove_segments(chrom, match_addr, remove_addr, output_addr):
     with open(remove_addr) as remove_file:
         for line in tqdm(remove_file, desc="Reading Remove List"):
 
-            temp_chr, start, end = line.strip(" ").split()
+            data_row = line.strip(" ").split()
 
-            if temp_chr == chrom:
-                remove_list.append((int(start), int(end)))
+            if data_row[0] == chrom:
+                remove_list.append((int(data_row[1]), int(data_row[2])))
 
     count = 0
 
