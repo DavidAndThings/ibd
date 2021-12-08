@@ -75,8 +75,7 @@ class QcHandler(CommandHandler):
 
             manager = TempFileManager()
             output_match = request.output + ".match"
-            fig_before = request.output + "_before.png"
-            fig_after = request.output + "_after.png"
+            figure = request.output + ".png"
 
             if request.identified is None:
 
@@ -97,19 +96,25 @@ class QcHandler(CommandHandler):
             hits_before, position_before = get_hits(request.map, request.match)
             thr = get_threshold(hits_before)
             hits_after, position_after = get_hits(request.map, output_match)
-            QcHandler.__plot_hits(hits_before, position_before, thr, fig_before)
-            QcHandler.__plot_hits(hits_after, position_after, thr, fig_after)
+            self.__plot_hits(request.chromosome, hits_before, position_before, hits_after, position_after, thr, figure)
 
         elif self.has_next():
             self.get_next().handle(request)
 
     @staticmethod
-    def __plot_hits(hits, position, thr, output_addr):
+    def __plot_hits(chrom, hits_before, position_before, hits_after, position_after, thr, output_addr):
 
-        plt.plot(position, hits)
+        line_before, = plt.plot(position_before, hits_before)
+        line_before.set_label("Before QC")
+
+        line_after, = plt.plot(position_after, hits_after)
+        line_after.set_label("After QC")
+
         plt.axhline(y=thr, color='r', linestyle="-")
         plt.xlabel("position")
         plt.ylabel("hits")
+        plt.title("Chromosome {} quality control".format(chrom))
+        plt.legend()
         plt.savefig(output_addr)
 
 
