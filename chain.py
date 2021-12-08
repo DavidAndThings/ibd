@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file, TempFileManager
-from qc import remove_segments, get_exclusions
+from qc import remove_segments, get_exclusions, get_hits, get_threshold
+import matplotlib.pyplot as plt
 
 
 class CommandHandler(ABC):
@@ -73,12 +74,15 @@ class QcHandler(CommandHandler):
         if request.tool == "qc":
 
             manager = TempFileManager()
+            output_match = request.output + ".match"
+            fig_before = request.output + "_before.png"
+            fig_after = request.output + "_after.png"
 
             if request.identified is None:
 
                 exclusions = manager.get_new_file()
                 get_exclusions(request.chromosome, request.map, request.match, exclusions)
-                remove_segments(request.chromosome, request.match, exclusions, request.output)
+                remove_segments(request.chromosome, request.match, exclusions, output_match)
 
             else:
                 exclusions_one, exclusions_two = request.identified, manager.get_new_file()
@@ -86,10 +90,26 @@ class QcHandler(CommandHandler):
 
                 results_temp = manager.get_new_file()
                 remove_segments(request.chromosome, request.match, exclusions_one, results_temp)
-                remove_segments(request.chromosome, results_temp, exclusions_two, request.output)
+                remove_segments(request.chromosome, results_temp, exclusions_two, output_match)
 
             manager.purge()
 
+            hits_before, position_before = get_hits(request.map, request.match)
+            thr = get_threshold(hits_before)
+            hits_after, position_after = get_hits(request.map, output_match)
+            QcHandler.__plot_hits(hits_before, position_before, thr, fig_before)
+            QcHandler.__plot_hits(hits_after, position_after, thr, fig_after)
+
         elif self.has_next():
             self.get_next().handle(request)
+
+    @staticmethod
+    def __plot_hits(hits, position, thr, output_addr):
+
+        plt.plot(position, hits)
+        plt.axhline(y=thr, color='r', linestyle="-")
+        plt.xlabel("position")
+        plt.ylabel("hits")
+        plt.savefig(output_addr)
+
 

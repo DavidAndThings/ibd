@@ -41,21 +41,9 @@ def remove_segments(chrom, match_addr, remove_addr, output_addr):
 
 def get_exclusions(chrom, map_addr, match_addr, output_addr):
 
-    map_data = load_map_data(map_addr)
-    hits = np.zeros(map_data[0].shape)
+    hits, positions = get_hits(map_addr, match_addr)
+    thresh = get_threshold(hits)
 
-    with open(match_addr) as match_file:
-
-        for line in tqdm(match_file, desc="Reading matches"):
-            data = line.strip().split()
-            hits[map_data[1][int(data[5])]:map_data[1][int(data[6])]] += 1
-
-    positions = np.array([item[3] for item in map_data[0]])
-
-    mean = hits.mean()
-    sd = hits.std()
-    thresh = mean + (3 * sd)
-    flag = False
     base = -1
 
     with open(output_addr, "w") as exclusion_file:
@@ -69,6 +57,28 @@ def get_exclusions(chrom, map_addr, match_addr, output_addr):
 
                 exclusion_file.write(f'{chrom}\t{base}\t{positions[index]}\n')
                 base = -1
+
+
+def get_hits(map_addr, match_addr):
+
+    map_data = load_map_data(map_addr)
+    hits = np.zeros(map_data[0].shape)
+
+    with open(match_addr) as match_file:
+        for line in tqdm(match_file, desc="Reading matches"):
+            data = line.strip().split()
+            hits[map_data[1][int(data[5])]:map_data[1][int(data[6])]] += 1
+
+    positions = np.array([item[3] for item in map_data[0]])
+
+    return hits, positions
+
+
+def get_threshold(hits):
+
+    mean = hits.mean()
+    sd = hits.std()
+    return mean + (3 * sd)
 
 
 def load_map_data(map_addr):
