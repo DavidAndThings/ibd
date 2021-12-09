@@ -3,7 +3,7 @@ from tqdm import tqdm, trange
 
 
 def remove_segments(chrom, match_addr, remove_addr, output_addr):
-    
+
     remove_list = []
 
     with open(remove_addr) as remove_file:
@@ -27,7 +27,7 @@ def remove_segments(chrom, match_addr, remove_addr, output_addr):
                 flagged = False
 
                 for item in remove_list:
-                    if (item[0] <= first < item[1]) or (item[1] >= last > item[0]):
+                    if first <= item[1] and item[0] <= last:
                         count += 1
                         flagged = True
                         break
