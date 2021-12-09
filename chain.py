@@ -28,7 +28,7 @@ class SampleConvertHandler(CommandHandler):
     def handle(self, request):
 
         if request.tool == "convert" and request.type == "sample":
-            sample_to_fam(request.sample, request.fam)
+            sample_to_fam(request.sample, request.output)
 
         elif self.has_next():
             self.get_next().handle(request)
@@ -39,7 +39,7 @@ class HapsConvertHandler(CommandHandler):
     def handle(self, request):
 
         if request.tool == "convert" and request.type == "haps":
-            haps_to_ped(request.haps, request.fam, request.ped)
+            haps_to_ped(request.haps, request.fam, request.output)
 
         elif self.has_next():
             self.get_next().handle(request)
