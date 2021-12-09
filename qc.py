@@ -89,7 +89,7 @@ def load_map_data(map_addr):
 
     pos_dic = {}
 
-    for item in trange(len(map_data)):
+    for item in trange(len(map_data), desc="Reading .map file"):
         pos_dic[map_data[item][3]] = item
 
     return map_data, pos_dic
