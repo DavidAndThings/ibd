@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file, TempFileManager
 from qc import remove_segments, get_exclusions, get_hits, get_threshold
 import matplotlib.pyplot as plt
+from graph import FileSampleGraph, build_graph_from_file
 
 
 class CommandHandler(ABC):
@@ -118,3 +119,12 @@ class QcHandler(CommandHandler):
         plt.savefig(output_addr)
 
 
+class GraphHandler(CommandHandler):
+
+    def handle(self, request):
+        
+        if request.tool == "graph":
+            pass
+
+        elif self.has_next():
+            self.get_next().handle(request)

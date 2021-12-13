@@ -1,5 +1,6 @@
 import argparse
 import sys
+from typing_extensions import Required
 
 
 class HelpOnErrorParser(argparse.ArgumentParser):
@@ -22,10 +23,16 @@ def build_parser():
     convert_parser = subparsers.add_parser("convert", help="A sets of tools to convert various types of files.")
     ilash_parser = subparsers.add_parser("ilash", help="Tool to run the ilash program.")
     qc_parser = subparsers.add_parser("qc", help="Tool to filter out bad ilash matches.")
+    graph_parser = subparsers.add_parser("graph", help='''
+        Tool to aggregate match files into sample pairs associated with the 
+        number of which counts the number of ibd overlap between two samples and the total 
+        genetic distance, in centimorgans, between two samples.
+    ''')
 
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
     build_qc_parser(qc_parser)
+    build_graph_parser(graph_parser)
 
     return master_parser
 
@@ -91,3 +98,17 @@ def build_qc_parser(qc_parser):
     qc_parser.add_argument(
         "--output", "-o", required=True, type=str, metavar="path", help="The filtered match file."
     )
+
+
+def build_graph_parser(graph_parser):
+
+    graph_parser.add_argument(
+        "--match-dir", "-m", type=str, required=True, metavar="dir",
+        help="A directory containing all the match files to build the sample connection graph."
+    )
+
+    graph_parser.add_argument(
+        "--output", "-o", type=str, required=True, metavar="dir",
+        help="The path to the output file which will contain a table with 4 columns:, id_1, id_2, count, dist"
+    )
+
