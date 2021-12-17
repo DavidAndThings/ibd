@@ -46,7 +46,9 @@ class FileSampleGraph(SampleGraph):
         self.__storage_tables[hash_id].write("{}\t{}\t{}\n".format(sample_id_1, sample_id_2, weight))
     
     def get_adjacency_list(self):
-        pass
+        
+        all_tables = [pd.read_csv(t, sep="\t") for t in self.__storage_tables.values()]
+        
 
     def purge(self):
         
@@ -61,7 +63,7 @@ def build_graph_from_file(match_addr, sample_graph):
     
     with open(match_addr, "r") as match_file:
 
-        for line in tqdm(match_file, desc="Building sample graph"):
+        for line in tqdm(match_file, desc="Building sample graph from file {}".format(match_addr)):
             
             sample_id_1, sample_id_2, weight = line.strip().split("\t")
             sample_graph.store_edge(sample_id_1, sample_id_2, weight)

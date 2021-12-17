@@ -3,6 +3,8 @@ from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file, TempF
 from qc import remove_segments, get_exclusions, get_hits, get_threshold
 import matplotlib.pyplot as plt
 from graph import FileSampleGraph, build_graph_from_file
+from os import listdir
+from os.path import isfile, join
 
 
 class CommandHandler(ABC):
@@ -124,7 +126,13 @@ class GraphHandler(CommandHandler):
     def handle(self, request):
         
         if request.tool == "graph":
-            pass
+            
+            onlyfiles = [f for f in listdir(request.match_dir) if isfile(join(request.match_dir, f)) and f.endswith(".match")]
+            sample_graph = FileSampleGraph(31, 10e9+9)
+            sample_graph.build_storage()
+
+            for f in onlyfiles:
+                build_graph_from_file(f, sample_graph)
 
         elif self.has_next():
             self.get_next().handle(request)
