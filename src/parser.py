@@ -1,6 +1,5 @@
 import argparse
 import sys
-from typing_extensions import Required
 
 
 class HelpOnErrorParser(argparse.ArgumentParser):
