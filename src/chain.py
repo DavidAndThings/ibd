@@ -128,7 +128,6 @@ class GraphHandler(CommandHandler):
         if request.tool == "graph":
             
             onlyfiles = [f for f in listdir(request.match_dir) if isfile(join(request.match_dir, f)) and f.endswith(".match")]
-            print(onlyfiles)
             sample_graph = FileSampleGraph(31, 10e9+9)
             sample_graph.build_storage()
 

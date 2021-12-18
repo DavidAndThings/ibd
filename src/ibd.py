@@ -11,11 +11,13 @@ if __name__ == '__main__':
     ilash_run = ILASHHandler()
     dist_conv = DistConvertHandler()
     qc_run = QcHandler()
+    graph_compiler = GraphHandler()
 
     sample_conv.set_next(haps_conv)
     haps_conv.set_next(ilash_run)
     ilash_run.set_next(dist_conv)
     dist_conv.set_next(qc_run)
+    qc_run.set_next(graph_compiler)
 
     args = p.parse_args()
     sample_conv.handle(args)
