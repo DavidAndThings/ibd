@@ -49,7 +49,7 @@ class FileSampleGraph(SampleGraph):
     
     def get_adjacency_list(self):
 
-        for t in self.__storage_tables.values():
+        for t in tqdm(self.__storage_tables.values(), desc="Compiling sample pair data"):
 
             sample_graph = process_sample_graph(t.name)
             sample_graph.to_csv(self.__output_addr, mode="a")
