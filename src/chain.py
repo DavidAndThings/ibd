@@ -133,6 +133,8 @@ class GraphHandler(CommandHandler):
 
             for f in onlyfiles:
                 build_graph_from_file(f, sample_graph)
+            
+            sample_graph.get_adjacency_list()
 
         elif self.has_next():
             self.get_next().handle(request)

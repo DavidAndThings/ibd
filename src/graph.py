@@ -48,6 +48,9 @@ class FileSampleGraph(SampleGraph):
     def get_adjacency_list(self):
         
         all_tables = [pd.read_csv(t, sep="\t") for t in self.__storage_tables.values()]
+
+        for t in all_tables:
+            print(t.shape)
         
 
     def purge(self):
