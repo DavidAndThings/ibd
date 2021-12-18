@@ -29,16 +29,17 @@ class SampleGraph(ABC):
 class FileSampleGraph(SampleGraph):
 
     # m would be the number of buckets into which the sample graph will split.
-    def __init__(self, p, m):
+    def __init__(self, p, m, output_dir):
 
         super().__init__()
         self.__p, self.__m = p, m
         self.__storage_tables = {}
+        self.__output_dir = output_dir
     
     def build_storage(self):
         
         for i in trange(self.__m, desc="Generating data storage"):
-            self.__storage_tables[i] = NamedTemporaryFile(mode="a")
+            self.__storage_tables[i] = NamedTemporaryFile(mode="a", dir=self.__output_dir)
 
     def store_edge(self, sample_id_1, sample_id_2, weight):
         

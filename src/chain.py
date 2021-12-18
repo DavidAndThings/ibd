@@ -128,7 +128,7 @@ class GraphHandler(CommandHandler):
         if request.tool == "graph":
             
             onlyfiles = [join(request.match_dir, f) for f in listdir(request.match_dir) if isfile(join(request.match_dir, f)) and f.endswith(".match")]
-            sample_graph = FileSampleGraph(31, 97)
+            sample_graph = FileSampleGraph(31, 97, request.output)
             sample_graph.build_storage()
 
             for f in onlyfiles:
