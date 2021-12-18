@@ -52,7 +52,7 @@ class FileSampleGraph(SampleGraph):
         for t in tqdm(self.__storage_tables.values(), desc="Compiling sample pair data"):
 
             sample_graph = process_sample_graph(t.name)
-            sample_graph.to_csv(self.__output_addr, mode="a")
+            sample_graph.to_csv(self.__output_addr, mode="a", index=False, sep="\t")
 
         
 
