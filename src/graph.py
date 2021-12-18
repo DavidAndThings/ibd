@@ -47,10 +47,11 @@ class FileSampleGraph(SampleGraph):
     
     def get_adjacency_list(self):
         
-        all_tables = [pd.read_csv(t.name, sep="\t") for t in self.__storage_tables.values()]
+        all_tables = [process_sample_graph(t) for t in self.__storage_tables.values()]
 
         for t in all_tables:
-            print(t.shape)
+            
+            print(t)
         
 
     def purge(self):
@@ -88,3 +89,14 @@ def polynomial_rolling_hash(str_input, p, m):
         power_of_p = (power_of_p * p) % m
  
     return int(hash_val)
+
+
+def process_sample_graph(sample_graph_addr):
+
+    sample_graph = pd.read_csv(
+        sample_graph_addr, sep="\t", 
+        names=["sample_1", "sample_2", "weight"],
+        dtype={"sample_1": str, "sample_2": str, "weight": float}
+    )
+
+    return sample_graph.groupby(["sample_1", "sample_2"]).count()
