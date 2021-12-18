@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+from pandas.core.algorithms import mode
 from tqdm import trange, tqdm
 from tempfile import NamedTemporaryFile
 import pandas as pd
@@ -29,17 +30,17 @@ class SampleGraph(ABC):
 class FileSampleGraph(SampleGraph):
 
     # m would be the number of buckets into which the sample graph will split.
-    def __init__(self, p, m, output_dir):
+    def __init__(self, p, m, output_addr):
 
         super().__init__()
         self.__p, self.__m = p, m
         self.__storage_tables = {}
-        self.__output_dir = output_dir
+        self.__output_addr = output_addr
     
     def build_storage(self):
         
         for i in trange(self.__m, desc="Generating data storage"):
-            self.__storage_tables[i] = NamedTemporaryFile(mode="a", dir=self.__output_dir)
+            self.__storage_tables[i] = NamedTemporaryFile(mode="a")
 
     def store_edge(self, sample_id_1, sample_id_2, weight):
         
@@ -47,12 +48,12 @@ class FileSampleGraph(SampleGraph):
         self.__storage_tables[hash_id].write("{}\t{}\t{}\n".format(sample_id_1, sample_id_2, weight))
     
     def get_adjacency_list(self):
-        
-        all_tables = [process_sample_graph(t.name) for t in self.__storage_tables.values()]
 
-        for t in all_tables:
-            
-            print(t)
+        for t in self.__storage_tables.values():
+
+            sample_graph = process_sample_graph(t.name)
+            sample_graph.to_csv(self.__output_addr, mode="a")
+
         
 
     def purge(self):
@@ -100,4 +101,6 @@ def process_sample_graph(sample_graph_addr):
         dtype={"sample_1": str, "sample_2": str, "weight": float}
     )
 
-    return sample_graph.groupby(["sample_1", "sample_2"]).count()
+    pair_size = sample_graph.groupby(["sample_1", "sample_2"]).size().reset_index(name="count")
+    pair_total = sample_graph.groupby(["sample_1", "sample_2"]).agg({"weight":"sum"}).reset_index()
+    return pd.merge(pair_size, pair_total, how="inner", on=["sample_1", "sample_2"])
