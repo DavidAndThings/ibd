@@ -47,7 +47,7 @@ class FileSampleGraph(SampleGraph):
     
     def get_adjacency_list(self):
         
-        all_tables = [process_sample_graph(t) for t in self.__storage_tables.values()]
+        all_tables = [process_sample_graph(t.name) for t in self.__storage_tables.values()]
 
         for t in all_tables:
             
