@@ -65,8 +65,8 @@ def build_graph_from_file(match_addr, sample_graph):
 
         for line in tqdm(match_file, desc="Building sample graph from file {}".format(match_addr)):
             
-            sample_id_1, sample_id_2, weight = line.strip().split("\t")
-            sample_graph.store_edge(sample_id_1, sample_id_2, weight)
+            data_row = line.strip().split("\t")
+            sample_graph.store_edge(data_row[0], data_row[2], data_row[9])
 
 
 # function to compute the polynomial rolling has of a string
