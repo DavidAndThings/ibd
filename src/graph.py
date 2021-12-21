@@ -15,7 +15,7 @@ class SampleGraph(ABC):
     # returns a data table with 4 columns, sample_id_1, sample_id_2
     # count and total_weight
     @abstractmethod
-    def get_adjacency_list(self):
+    def flush_adjacency_list(self, output_addr):
         pass
 
     # Clean the temperory storage on which the sample graph was stored.
