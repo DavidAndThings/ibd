@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-from pandas.core.algorithms import mode
 from tqdm import trange, tqdm
 from tempfile import NamedTemporaryFile
 import pandas as pd
@@ -30,12 +29,11 @@ class SampleGraph(ABC):
 class FileSampleGraph(SampleGraph):
 
     # m would be the number of buckets into which the sample graph will split.
-    def __init__(self, p, m, output_addr):
+    def __init__(self, p, m):
 
         super().__init__()
         self.__p, self.__m = p, m
         self.__storage_tables = {}
-        self.__output_addr = output_addr
     
     def build_storage(self):
         
@@ -47,14 +45,12 @@ class FileSampleGraph(SampleGraph):
         hash_id = polynomial_rolling_hash(sample_id_1 + "_" + sample_id_2, self.__p, self.__m)
         self.__storage_tables[hash_id].write("{}\t{}\t{}\n".format(sample_id_1, sample_id_2, weight))
     
-    def get_adjacency_list(self):
+    def flush_adjacency_list(self, output_addr):
 
         for t in tqdm(self.__storage_tables.values(), desc="Compiling sample pair data"):
 
             sample_graph = process_sample_graph(t.name)
-            sample_graph.to_csv(self.__output_addr, mode="a", index=False, sep="\t", header=False)
-
-        
+            sample_graph.to_csv(output_addr, mode="a", index=False, sep="\t", header=False)
 
     def purge(self):
         
