@@ -127,6 +127,9 @@ def build_infomap_parser(infomap_parser):
     )
 
     infomap_parser.add_argument(
-        "--output", "-o", type=str, required=True,
-        help="Path to the output .json file in which the infomap clusters will be written."
+        "--output-prefix", "-o", type=str, required=True,
+        help='''
+            Prefix to the output .json file in which the infomap clusters will 
+            be written and the .txt file in which the sample id and their numerical correspondent will be written.
+        '''
     )

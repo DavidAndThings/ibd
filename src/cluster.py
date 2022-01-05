@@ -1,5 +1,6 @@
 from infomap import Infomap
 from tqdm import tqdm
+import pandas as pd
 
 
 
@@ -18,9 +19,18 @@ class SampleIdTracker:
             self.__counter += 1
         
         return self.__storage[sample_identifier]
+    
+    def flush_id_mapping(self, mapping_addr):
+
+        id_mapping = pd.DataFrame([], columns=["name", "id"])
+
+        for key in self.__storage:
+            id_mapping.append({"name": key, "id": self.__storage[key]}, ignore_index=True)
+        
+        id_mapping.to_csv(mapping_addr, index=False, header=False, sep="\t")
 
 
-def run_infomap(graph_addr, output_addr):
+def run_infomap(graph_addr, output_prefix):
 
     im = Infomap("-f undirected")
     tracker = SampleIdTracker()
@@ -35,6 +45,8 @@ def run_infomap(graph_addr, output_addr):
             im.add_link(sample_1_id, sample_2_id, float(dist))
     
     im.run()
-    im.write_json(output_addr)
+    im.write_json("{}.json".format(output_prefix))
+
+    tracker.flush_id_mapping("{}_id_map.txt".format(output_prefix))
 
 
