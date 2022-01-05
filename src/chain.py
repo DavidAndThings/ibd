@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from graph import FileSampleGraph, build_graph_from_file
 from os import listdir
 from os.path import isfile, join
+from cluster import run_infomap
 
 
 class CommandHandler(ABC):
@@ -136,6 +137,18 @@ class GraphHandler(CommandHandler):
             
             sample_graph.flush_adjacency_list(request.output)
             sample_graph.purge()
+
+        elif self.has_next():
+            self.get_next().handle(request)
+
+
+class InfoMapHandler(CommandHandler):
+
+    def handle(self, request):
+        
+        if request.tool == "infomap":
+            
+            run_infomap(request.infomap, request.output)
 
         elif self.has_next():
             self.get_next().handle(request)

@@ -22,16 +22,23 @@ def build_parser():
     convert_parser = subparsers.add_parser("convert", help="A sets of tools to convert various types of files.")
     ilash_parser = subparsers.add_parser("ilash", help="Tool to run the ilash program.")
     qc_parser = subparsers.add_parser("qc", help="Tool to filter out bad ilash matches.")
+    
     graph_parser = subparsers.add_parser("graph", help='''
         Tool to aggregate match files into sample pairs associated with the 
         number of which counts the number of ibd overlap between two samples and the total 
         genetic distance, in centimorgans, between two samples.
+    ''')
+    
+    infomap_parser = subparsers.add_parser("infomap", help='''
+        Tool to obtain the infomap clusters from the ibd sharing graph built using the
+        ilash and the graph tool.
     ''')
 
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
     build_qc_parser(qc_parser)
     build_graph_parser(graph_parser)
+    build_infomap_parser(infomap_parser)
 
     return master_parser
 
@@ -111,3 +118,15 @@ def build_graph_parser(graph_parser):
         help="The path to the output file which will contain a table with 4 columns:, id_1, id_2, count, dist"
     )
 
+
+def build_infomap_parser(infomap_parser):
+
+    infomap_parser.add_argument(
+        "--graph", "-g", type=str, required=True, metavar="path",
+        help="Path to a .graph file as defined in the output of the graph tool."
+    )
+
+    infomap_parser.add_argument(
+        "--output", "-o", type=str, required=True,
+        help="Path to the output .json file in which the infomap clusters will be written."
+    )
