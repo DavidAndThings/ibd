@@ -25,7 +25,7 @@ class SampleIdTracker:
         id_mapping = pd.DataFrame([], columns=["name", "id"])
 
         for key in self.__storage:
-            id_mapping.append({"name": key, "id": self.__storage[key]}, ignore_index=True)
+            id_mapping = id_mapping.append({"name": key, "id": self.__storage[key]}, ignore_index=True)
         
         id_mapping.to_csv(mapping_addr, index=False, header=False, sep="\t")
 
