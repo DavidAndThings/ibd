@@ -147,8 +147,8 @@ class InfoMapHandler(CommandHandler):
     def handle(self, request):
         
         if request.tool == "infomap":
-            
-            run_infomap(request.infomap, request.output)
+
+            run_infomap(request.graph, request.output)
 
         elif self.has_next():
             self.get_next().handle(request)
