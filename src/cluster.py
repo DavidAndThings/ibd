@@ -9,28 +9,25 @@ class SampleIdTracker:
     def __init__(self):
         
         self.__counter = 0
-        self.__storage = dict()
+        self.__id_storage = dict()
+        self.__name_storage = []
     
-    def get_sample_id(self, sample_identifier):
+    def get_sample_id(self, sample_name):
         
-        if sample_identifier not in self.__storage:
+        if sample_name not in self.__id_storage:
 
-            self.__storage[sample_identifier] = self.__counter
+            self.__id_storage[sample_name] = self.__counter
+            self.__name_storage.append(sample_name)
             self.__counter += 1
         
-        return self.__storage[sample_identifier]
+        return self.__id_storage[sample_name]
     
-    def flush_id_mapping(self, mapping_addr):
-
-        id_mapping = pd.DataFrame([], columns=["name", "id"])
-
-        for key in self.__storage:
-            id_mapping = id_mapping.append({"name": key, "id": self.__storage[key]}, ignore_index=True)
-        
-        id_mapping.to_csv(mapping_addr, index=False, header=False, sep="\t")
+    def get_sample_name(self, sample_id):
+        return self.__name_storage[sample_id]
 
 
-def run_infomap(graph_addr, output_prefix):
+# Run the mapequation clustering algorithm
+def run_infomap(graph_addr, output_addr):
 
     im = Infomap("-f undirected")
     tracker = SampleIdTracker()
@@ -45,8 +42,24 @@ def run_infomap(graph_addr, output_prefix):
             im.add_link(sample_1_id, sample_2_id, float(dist))
     
     im.run()
-    im.write_json("{}.json".format(output_prefix))
 
-    tracker.flush_id_mapping("{}_id_map.txt".format(output_prefix))
+    flush_clustering_results(im, tracker, output_addr)
 
 
+# flush the output of the clustering algorithm to file
+def flush_clustering_results(infomap_obj, tracker, output_addr):
+
+    cluster_assignments = pd.DataFrame([], columns=["sample_name", "cluster"])
+    infomap_modules = infomap_obj.get_modules(depth_level=1)
+
+    for sample_id in infomap_modules:
+        
+        cluster_assignments = cluster_assignments.append(
+            {
+                "sample_name": tracker.get_sample_name(sample_id),
+                "cluster": infomap_modules[sample_id]
+            }, 
+            ignore_index=True
+        )
+    
+    cluster_assignments.to_csv(output_addr, sep="\t", index=False, header=False)
