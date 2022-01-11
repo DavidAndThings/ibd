@@ -1,5 +1,48 @@
 import numpy as np
 from tqdm import tqdm, trange
+from helpers import TempFileManager
+import matplotlib.pyplot as plt
+
+
+def get_high_quality_regions(map_addr, match_addr, chrom, output_addr, identified=None):
+
+    manager = TempFileManager()
+
+    if identified is None:
+
+        exclusions = manager.get_new_file()
+        get_exclusions(chrom, map_addr, match_addr, exclusions)
+        remove_segments(chrom, match_addr, exclusions, output_addr)
+
+    else:
+        exclusions_one, exclusions_two = identified, manager.get_new_file()
+        get_exclusions(chrom, map_addr, match_addr, exclusions_two)
+
+        results_temp = manager.get_new_file()
+        remove_segments(chrom, match_addr, exclusions_one, results_temp)
+        remove_segments(chrom, results_temp, exclusions_two, output_addr)
+    
+    manager.purge()
+
+
+def plot_hits(map_addr, match_addr, chrom, filtered_match_addr, output_addr):
+    
+    hits_before, position_before = get_hits(map_addr, match_addr)
+    thr = get_threshold(hits_before)
+    hits_after, position_after = get_hits(map_addr, filtered_match_addr)
+
+    line_before, = plt.plot(position_before, hits_before)
+    line_before.set_label("Before QC")
+
+    line_after, = plt.plot(position_after, hits_after)
+    line_after.set_label("After QC")
+
+    plt.axhline(y=thr, color='r', linestyle="-")
+    plt.xlabel("position")
+    plt.ylabel("hits")
+    plt.title("Chromosome {} quality control".format(chrom))
+    plt.legend()
+    plt.savefig(output_addr)
 
 
 def remove_segments(chrom, match_addr, remove_addr, output_addr):
