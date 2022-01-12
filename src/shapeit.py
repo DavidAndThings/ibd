@@ -6,6 +6,10 @@ from qc import get_high_quality_regions, plot_hits
 from tqdm import tqdm
 
 
+# The .haps, .sample and genetic distance files are assumed to be clustered based on 
+# chromosome and each file name contains a string starts with chr followed by the number
+# marking the chromosome for which the file contains data.
+
 class ShapeIt:
 
     def __init__(self, config):
@@ -53,7 +57,7 @@ def get_files_from_dir(dir_addr, post_fix):
     
     for i in  all_files:
         
-        chrom = re.match(".+([0-9]{1,2}).+", i).group(1)
+        chrom = re.match(".+chr([0-9]{1,2}).+", i).group(1)
         files_dir[chrom] = i
     
     return files_dir
