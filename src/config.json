@@ -1,0 +1,7 @@
+{
+    "haps_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
+    "sample_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
+    "dist_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/genetic_maps",
+    "identified_regions": "/sc/arion/projects/ipm2/for_roohy/exclude_regions_hg19.txt",
+    "output_dir": "test"
+}

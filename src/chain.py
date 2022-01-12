@@ -5,6 +5,8 @@ from graph import FileSampleGraph, build_graph_from_file
 from os import listdir
 from os.path import isfile, join
 from cluster import run_infomap
+import json
+from shapeit import ShapeIt
 
 
 class CommandHandler(ABC):
@@ -122,4 +124,21 @@ class InfoMapHandler(CommandHandler):
             run_infomap(request.graph, request.output_prefix)
 
         elif self.has_next():
+            self.get_next().handle(request)
+
+
+class ShapeItHandler(CommandHandler):
+
+    def handle(self, request):
+
+        if request.tool == "shapeit":
+
+            with open(request.config) as config_file:
+
+                config_data = json.load(config_file)
+                shapeit_workflow = ShapeIt(config_data)
+                shapeit_workflow.run()
+        
+        elif self.has_next():
+            
             self.get_next().handle(request)

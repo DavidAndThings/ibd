@@ -3,18 +3,25 @@ from os import listdir
 from os.path import isfile, join
 import re
 from qc import get_high_quality_regions, plot_hits
+from tqdm import tqdm
 
 
 class ShapeIt:
 
-    def __init__(self, haps_dir, sample_dir, dist_dir, output_addr):
+    def __init__(self, config):
 
-        self.__haps = get_files_from_dir(haps_dir, ".haps")
-        self.__sample = get_files_from_dir(sample_dir, ".sample")
-        self.__dist = get_files_from_dir(dist_dir, ".txt")
+        self.__haps = get_files_from_dir(config["haps_dir"], ".haps")
+        self.__sample = get_files_from_dir(config["sample_dir"], ".sample")
+        self.__dist = get_files_from_dir(config["dist_dir"], ".txt")
 
-        self.__output_addr = output_addr
+        self.__output_dir = config["output_dir"]
+        self.__identified_regions = config["identified_regions"]
         self.__temp_manager = TempFileManager()
+    
+    def run(self):
+
+        for chrom in tqdm(self.__haps, desc="Running IBD community detection workflow (SHAPEIT)"):
+            self.get_quality_ibd_regions(chrom)
     
     # chr is an integer representing the chromosome under processing
     # the number must in range 1-22
@@ -31,8 +38,8 @@ class ShapeIt:
         build_map_file(self.__haps[chrom], self.__dist[chrom], chrom, map_file)
         run_ilash(ped_file, map_file, match_file)
 
-        get_high_quality_regions(map_file, match_file, chrom, filtered_match_file)
-        plot_hits(map_file, match_file, chrom, filtered_match_file, "qc_hit_plot_chr{}.png".format(chrom))
+        get_high_quality_regions(map_file, match_file, chrom, filtered_match_file, self.__identified_regions)
+        plot_hits(map_file, match_file, chrom, filtered_match_file, self.__output_dir + "/qc_hit_plot_chr{}.png".format(chrom))
 
 
 def get_files_from_dir(dir_addr, post_fix):

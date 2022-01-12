@@ -34,11 +34,17 @@ def build_parser():
         ilash and the graph tool.
     ''')
 
+    shapeit_parser = subparsers.add_parser("shapeit", help='''
+        Tool to run the entire ibd community detection workflow using the phased genotype
+        files from the SHAPEIT software as input.
+    ''')
+
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
     build_qc_parser(qc_parser)
     build_graph_parser(graph_parser)
     build_infomap_parser(infomap_parser)
+    build_shapeit_parser(shapeit_parser)
 
     return master_parser
 
@@ -131,5 +137,14 @@ def build_infomap_parser(infomap_parser):
         help='''
             Prefix to the output .json file in which the infomap clusters will 
             be written and the .txt file in which the sample id and their numerical correspondent will be written.
+        '''
+    )
+
+def build_shapeit_parser(shapeit_parser):
+
+    shapeit_parser.add_argument(
+        "--config", "-c", type=str, required=True,
+        help='''
+            Path to a config file which specifies all dependency and output paths.
         '''
     )
