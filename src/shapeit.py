@@ -4,6 +4,8 @@ from os.path import isfile, join
 import re
 from qc import get_high_quality_regions, plot_hits
 from tqdm import tqdm
+from graph import FileSampleGraph, build_graph_from_file
+from cluster import run_infomap
 
 
 # The .haps, .sample and genetic distance files are assumed to be clustered based on 
@@ -23,9 +25,27 @@ class ShapeIt:
         self.__temp_manager = TempFileManager()
     
     def run(self):
+        
+        sample_ibd_graph = self.build_sample_ibd_graph()
+        run_infomap(sample_ibd_graph, self.__output_dir + "/sample_cluster.txt")
+    
+
+    def build_sample_ibd_graph(self):
+
+        sample_graph = FileSampleGraph(31, 97)
+        sample_graph.build_storage()
+        sample_ibd_graph_file = self.__temp_manager.get_new_file()
 
         for chrom in tqdm(self.__haps, desc="Running IBD community detection workflow (SHAPEIT)"):
-            self.get_quality_ibd_regions(chrom)
+
+            filtered_match_file = self.get_quality_ibd_regions(chrom)
+            build_graph_from_file(filtered_match_file, sample_graph)
+        
+        sample_graph.flush_adjacency_list(sample_ibd_graph_file)
+        sample_graph.purge()
+
+        return sample_ibd_graph_file
+
     
     # chr is an integer representing the chromosome under processing
     # the number must in range 1-22
@@ -44,6 +64,8 @@ class ShapeIt:
 
         get_high_quality_regions(map_file, match_file, chrom, filtered_match_file, self.__identified_regions)
         plot_hits(map_file, match_file, chrom, filtered_match_file, self.__output_dir + "/qc_hit_plot_chr{}.png".format(chrom))
+
+        return filtered_match_file
 
 
 def get_files_from_dir(dir_addr, post_fix):
