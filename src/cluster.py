@@ -34,7 +34,7 @@ def run_infomap(graph_addr, output_addr):
 
     with open(graph_addr) as graph_file:
 
-        for line in tqdm(graph_file, desc="Building infomap"):
+        for line in tqdm(graph_file, desc="Building infomap", leave=False):
 
             sample_1, sample_2, count, dist = line.split("\t")
             sample_1_id, sample_2_id = tracker.get_sample_id(sample_1), tracker.get_sample_id(sample_2)

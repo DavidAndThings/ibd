@@ -50,7 +50,7 @@ def remove_segments(chrom, match_addr, remove_addr, output_addr):
     remove_list = []
 
     with open(remove_addr) as remove_file:
-        for line in tqdm(remove_file, desc="Reading Remove List"):
+        for line in tqdm(remove_file, desc="Reading Remove List", leave=False):
 
             data_row = line.strip(" ").split()
 
@@ -62,7 +62,7 @@ def remove_segments(chrom, match_addr, remove_addr, output_addr):
     with open(match_addr, 'r') as match_file:
         with open(output_addr, 'w') as output_file:
 
-            for line in tqdm(match_file, desc="Removing lines"):
+            for line in tqdm(match_file, desc="Removing lines", leave=False):
 
                 data = line.strip().split('\t')
                 first = int(data[5])
@@ -91,7 +91,7 @@ def get_exclusions(chrom, map_addr, match_addr, output_addr):
 
     with open(output_addr, "w") as exclusion_file:
 
-        for index, val in tqdm(enumerate(hits), desc="Filtering hits"):
+        for index, val in tqdm(enumerate(hits), desc="Filtering hits", leave=False):
 
             if val > thresh:
                 if base == -1:
@@ -108,7 +108,7 @@ def get_hits(map_addr, match_addr):
     hits = np.zeros(map_data[0].shape)
 
     with open(match_addr) as match_file:
-        for line in tqdm(match_file, desc="Reading matches"):
+        for line in tqdm(match_file, desc="Reading matches", leave=False):
             data = line.strip().split()
             hits[map_data[1][int(data[5])]:map_data[1][int(data[6])]] += 1
 
@@ -132,7 +132,7 @@ def load_map_data(map_addr):
 
     pos_dic = {}
 
-    for item in trange(len(map_data), desc="Reading .map file"):
+    for item in trange(len(map_data), desc="Reading .map file", leave=False):
         pos_dic[map_data[item][3]] = item
 
     return map_data, pos_dic

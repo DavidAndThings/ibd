@@ -47,7 +47,7 @@ class FileSampleGraph(SampleGraph):
     
     def flush_adjacency_list(self, output_addr):
 
-        for t in tqdm(self.__storage_tables.values(), desc="Compiling sample pair data"):
+        for t in tqdm(self.__storage_tables.values(), desc="Compiling sample pair data", leave=False):
 
             sample_graph = process_sample_graph(t.name)
             sample_graph.to_csv(output_addr, mode="a", index=False, sep="\t", header=False)
@@ -65,7 +65,7 @@ def build_graph_from_file(match_addr, sample_graph):
     
     with open(match_addr, "r") as match_file:
 
-        for line in tqdm(match_file, desc="Building sample graph from file {}".format(match_addr)):
+        for line in tqdm(match_file, desc="Building sample graph from file {}".format(match_addr), leave=False):
             
             data_row = line.strip().split("\t")
             sample_graph.store_edge(data_row[0], data_row[2], data_row[9])

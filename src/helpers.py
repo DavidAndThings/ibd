@@ -1,3 +1,4 @@
+from pickle import FALSE
 import tempfile
 import pandas as pd
 import numpy as np
@@ -38,7 +39,7 @@ def haps_to_ped(haps_addr, fam_addr, ped_addr):
 
     with open(fam_addr, 'r') as famFile:
 
-        for line in tqdm(famFile, desc="Reading the .fam file"):
+        for line in tqdm(famFile, desc="Reading the .fam file", leave=FALSE):
             
             data = line.strip().split()
             id_list.append((data[0], data[1]))
@@ -52,7 +53,7 @@ def convert_haps(hap_addr, size, dim, id_list, output_addr):
     counter = 0
 
     with open(hap_addr, 'r') as file:
-        for line in tqdm(file, desc="Reading the .haps file"):
+        for line in tqdm(file, desc="Reading the .haps file", leave=False):
 
             temp_haps = line.strip().split()[5:]
             haps[:, counter] = [int(item) for item in temp_haps]
@@ -61,7 +62,7 @@ def convert_haps(hap_addr, size, dim, id_list, output_addr):
     haps[haps == 0] = 2
 
     with open(output_addr, 'w') as output:
-        for i in trange(haps.shape[0] // 2, desc="Writing .ped file"):
+        for i in trange(haps.shape[0] // 2, desc="Writing .ped file", leave=False):
             # prepended = '%05d' % i
             output.write(f'{id_list[i][0]} {id_list[i][1]} 0 0 0 -9 ')
 
@@ -96,7 +97,7 @@ def build_map_file(haps_addr, dist_addr, chrom, output_addr):
 
         map_data = []
 
-        for line in tqdm(haps_file, desc="Extracting the first 3 columns of the .map file"):
+        for line in tqdm(haps_file, desc="Extracting the first 3 columns of the .map file", leave=False):
             map_data.append(line.split()[0:3])
 
         query_file = tempfile.NamedTemporaryFile(mode="w")
@@ -128,7 +129,7 @@ def count_lines_in_file(file_addr):
 
         counter = 0
 
-        for line in tqdm(f, desc="Counting columns"):
+        for line in tqdm(f, desc="Counting columns", leave=False):
 
             if line != "\n":
                 counter += 1
@@ -161,7 +162,7 @@ def interpolate_map(query_addr, gene_map_addr, chrom):
     temp_dist = 0
     output_table = pd.DataFrame(data=None, columns=["chr", "RSID", "dist", "position"])
 
-    for queryItem in tqdm(query_data, desc="Interpolating the .map file"):
+    for queryItem in tqdm(query_data, desc="Interpolating the .map file", leave=False):
         if queryItem[1] in gen_dict:
             temp_dist = gen_data[gen_dict[queryItem[1]]][2]
             last_index = gen_dict[queryItem[1]]
