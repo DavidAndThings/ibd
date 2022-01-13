@@ -28,6 +28,7 @@ class ShapeIt:
         
         sample_ibd_graph = self.build_sample_ibd_graph()
         run_infomap(sample_ibd_graph, self.__output_dir + "/sample_cluster.txt")
+        self.__temp_manager.purge()
     
 
     def build_sample_ibd_graph(self):
