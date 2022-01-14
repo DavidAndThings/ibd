@@ -31,6 +31,7 @@ def plot_hits(map_addr, match_addr, chrom, filtered_match_addr, output_addr):
     thr = get_threshold(hits_before)
     hits_after, position_after = get_hits(map_addr, filtered_match_addr)
 
+    plt.figure()
     line_before, = plt.plot(position_before, hits_before)
     line_before.set_label("Before QC")
 
