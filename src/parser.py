@@ -114,14 +114,40 @@ def build_qc_parser(qc_parser):
 
 def build_graph_parser(graph_parser):
 
-    graph_parser.add_argument(
+    subparsers = graph_parser.add_subparsers(dest="graph_tools", title="Graph Manipulation Tools")
+
+    build_parser = subparsers.add_parser("build", help="Tool to build sample IBD sharing graph")
+
+    build_parser.add_argument(
         "--match-dir", "-m", type=str, required=True, metavar="dir",
         help="A directory containing all the match files to build the sample connection graph."
     )
 
-    graph_parser.add_argument(
+    build_parser.add_argument(
         "--output", "-o", type=str, required=True, metavar="dir",
         help="The path to the output file which will contain a table with 4 columns:, id_1, id_2, count, dist"
+    )
+
+    filter_parser = subparsers.add_parser("filter", help="Tool to exclude samples from a .graph file")
+
+    filter_parser.add_argument(
+        "--graph", "-g", type=str, required=True, metavar="path",
+        help="Path to a .graph file."
+    )
+
+    filter_parser.add_argument(
+        "--exclude", "-e", type=str, required=True, metavar="path",
+        help='''
+        Path to a .txt file containg a list of sample ids to exclude. Please note that all edges containing
+        a sample id from this list will be removed.
+        '''
+    )
+
+    filter_parser.add_argument(
+        "--output", "-o", type=str, required=True, metavar="path",
+        help='''
+        Path to the output .graph file. Containing the graph with edges filtered.
+        '''
     )
 
 

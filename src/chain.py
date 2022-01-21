@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file, TempFileManager
+from helpers import sample_to_fam, haps_to_ped, run_ilash, build_map_file
 from qc import get_high_quality_regions, plot_hits
-from graph import FileSampleGraph, build_graph_from_file
+from graph import FileSampleGraph, build_graph_from_file, filter_sample_graph
 from os import listdir
 from os.path import isfile, join
 from cluster import run_infomap
@@ -99,7 +99,7 @@ class GraphHandler(CommandHandler):
 
     def handle(self, request):
         
-        if request.tool == "graph":
+        if request.tool == "graph" and request.graph_tools == "build":
             
             onlyfiles = [join(request.match_dir, f) for f in listdir(request.match_dir) if isfile(join(request.match_dir, f)) and f.endswith(".match")]
             sample_graph = FileSampleGraph(31, 97)
@@ -110,6 +110,10 @@ class GraphHandler(CommandHandler):
             
             sample_graph.flush_adjacency_list(request.output)
             sample_graph.purge()
+        
+        elif request.tool == "graph" and request.graph_tools == "filter":
+
+            filter_sample_graph(request.graph, request.exclude, request.output)
 
         elif self.has_next():
             self.get_next().handle(request)

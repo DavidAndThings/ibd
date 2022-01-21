@@ -100,3 +100,19 @@ def process_sample_graph(sample_graph_addr):
     pair_size = sample_graph.groupby(["sample_1", "sample_2"]).size().reset_index(name="count")
     pair_total = sample_graph.groupby(["sample_1", "sample_2"]).agg({"weight":"sum"}).reset_index()
     return pd.merge(pair_size, pair_total, how="inner", on=["sample_1", "sample_2"])
+
+
+def filter_sample_graph(sample_graph_addr, exclude_list_addr, output_addr):
+
+    with open(exclude_list_addr) as exclusion_file, open(sample_graph_addr) as graph_file, \
+        open(output_addr, mode="a") as filtered_graph:
+                        
+        related_samples = [sample_id.strip() for sample_id in exclusion_file.readlines()]
+
+        for line in tqdm(graph_file, desc="Filtering sample graph"):
+                            
+            sample_1, sample_2, count, dist = line.split("\t")
+
+            if sample_1 not in related_samples and sample_2 not in related_samples:
+
+                filtered_graph.write("{}\t{}\t{}\t{}\n", sample_1, sample_2, count, dist)

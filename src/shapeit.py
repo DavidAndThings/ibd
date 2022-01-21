@@ -4,7 +4,7 @@ from os.path import isfile, join
 import re
 from qc import get_high_quality_regions, plot_hits
 from tqdm import tqdm
-from graph import FileSampleGraph, build_graph_from_file
+from graph import FileSampleGraph, build_graph_from_file, filter_sample_graph
 from cluster import run_infomap
 
 
@@ -22,13 +22,26 @@ class ShapeIt:
 
         self.__output_dir = config["output_dir"]
         self.__identified_regions = config["identified_regions"]
+        self.__related_samples = config["related_samples"]
         self.__temp_manager = TempFileManager()
     
     def run(self):
         
         sample_ibd_graph = self.build_sample_ibd_graph()
-        run_infomap(sample_ibd_graph, self.__output_dir + "/sample_cluster.txt")
+        filtered_sample_ibd_graph = self.filter_sample_ibd_graph(sample_ibd_graph)
+        run_infomap(filtered_sample_ibd_graph, self.__output_dir + "/sample_cluster.txt")
         self.__temp_manager.purge()
+    
+    def filter_sample_ibd_graph(self, ibd_graph_addr):
+
+        if self.__related_samples is not None:
+
+            output_addr = self.__temp_manager.get_new_file()
+            filter_sample_graph(ibd_graph_addr, self.__related_samples, output_addr)
+            return output_addr
+        
+        else:
+            return ibd_graph_addr
     
 
     def build_sample_ibd_graph(self):
