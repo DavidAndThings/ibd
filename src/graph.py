@@ -111,8 +111,8 @@ def filter_sample_graph(sample_graph_addr, exclude_list_addr, output_addr):
 
         for line in tqdm(graph_file, desc="Filtering sample graph"):
                             
-            sample_1, sample_2, count, dist = line.split("\t")
+            sample_1, sample_2, count, dist = line.strip().split("\t")
 
             if sample_1 not in related_samples and sample_2 not in related_samples:
 
-                filtered_graph.write("{}\t{}\t{}\t{}".format(sample_1, sample_2, count, dist))
+                filtered_graph.write("{}\t{}\t{}\t{}\n".format(sample_1, sample_2, count, dist))
