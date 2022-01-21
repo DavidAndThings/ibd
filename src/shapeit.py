@@ -22,7 +22,7 @@ class ShapeIt:
 
         self.__output_dir = config["output_dir"]
         self.__identified_regions = config["identified_regions"]
-        self.__related_samples = config["related_samples"]
+        self.__exclude_samples = config["exclude_samples"]
         self.__temp_manager = TempFileManager()
     
     def run(self):
@@ -34,10 +34,10 @@ class ShapeIt:
     
     def filter_sample_ibd_graph(self, ibd_graph_addr):
 
-        if self.__related_samples is not None:
+        if self.__exclude_samples is not None:
 
             output_addr = self.__temp_manager.get_new_file()
-            filter_sample_graph(ibd_graph_addr, self.__related_samples, output_addr)
+            filter_sample_graph(ibd_graph_addr, self.__exclude_samples, output_addr)
             return output_addr
         
         else:
