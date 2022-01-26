@@ -189,3 +189,18 @@ def find_head(gen_data, index, position):
              (gen_data[index - 1][1] - gen_data[index - 2][1])
 
     return result + gen_data[index - 1][2], index - 1
+
+
+# Run the shapeit phasing software. To execute this function, a ShapeIt binary must 
+# be present in the working directory. The config argument is a python dictionary that
+# must include the following fields: bed, bim, fam, genetic_map, output_haps, output_sample
+def shapeit_phase(config):
+
+    subprocess.run(
+        [
+            "./shapit", "--input-bed", 
+            "{}\s{}\s{}".format(config["bed"], config["bim"], config["fam"]),
+            "--input-map", config["genetic_map"], 
+            "--output-max", "{}\s{}".format(config["output_haps"], config["output_sample"])
+        ], check=True
+    )
