@@ -48,45 +48,6 @@ class ToIlashJob(Thread):
                 break
 
 
-# Run the pipeline from ShapeIt phasing to QCed ilash output
-class SingleChromToIlash:
-
-    # The config argument must be a python dictionary which contains the following
-    # fields: bed, bim, fam, genetic_map, chrom, exclude_regions, output_match, 
-    # output_png
-    def __init__(self, config):
-
-        self.__config = config
-        self.__temp_manager = TempFileManager()
-    
-    def run(self):
-
-        chrom = self.__config["chrom"]
-
-        haps_file = self.__temp_manager.get_new_file()
-        sample_file = self.__temp_manager.get_new_file()
-
-        fam_file = self.__temp_manager.get_new_file()
-        ped_file = self.__temp_manager.get_new_file()
-        map_file = self.__temp_manager.get_new_file()
-        match_file = self.__temp_manager.get_new_file()
-
-        filtered_match_file = self.__config["output_match"]
-        output_png = self.__config["output_png"]
-
-        shapeit_phase({**self.__config, "output_haps": haps_file, "output_sample": sample_file})
-
-        sample_to_fam(sample_file, fam_file)
-        haps_to_ped(haps_file, fam_file, ped_file)
-        build_map_file(haps_file, self.__config["genetic_map"], chrom, map_file)
-        run_ilash(ped_file, map_file, match_file)
-
-        get_high_quality_regions(map_file, match_file, chrom, filtered_match_file, self.__config["exclude_regions"])
-        plot_hits(map_file, match_file, chrom, filtered_match_file, output_png)
-
-        self.__temp_manager.purge()
-
-
 class JobManager:
 
     # The config argument must be a python dictionary which contains the 
@@ -128,6 +89,45 @@ class JobManager:
     
     def has_jobs(self):
         return len(self.__chrom_configs) > 0
+
+
+# Run the pipeline from ShapeIt phasing to QCed ilash output
+class SingleChromToIlash:
+
+    # The config argument must be a python dictionary which contains the following
+    # fields: bed, bim, fam, genetic_map, chrom, exclude_regions, output_match, 
+    # output_png
+    def __init__(self, config):
+
+        self.__config = config
+        self.__temp_manager = TempFileManager()
+    
+    def run(self):
+
+        chrom = self.__config["chrom"]
+
+        haps_file = self.__temp_manager.get_new_file()
+        sample_file = self.__temp_manager.get_new_file()
+
+        fam_file = self.__temp_manager.get_new_file()
+        ped_file = self.__temp_manager.get_new_file()
+        map_file = self.__temp_manager.get_new_file()
+        match_file = self.__temp_manager.get_new_file()
+
+        filtered_match_file = self.__config["output_match"]
+        output_png = self.__config["output_png"]
+
+        shapeit_phase({**self.__config, "output_haps": haps_file, "output_sample": sample_file})
+
+        sample_to_fam(sample_file, fam_file)
+        haps_to_ped(haps_file, fam_file, ped_file)
+        build_map_file(haps_file, self.__config["genetic_map"], chrom, map_file)
+        run_ilash(ped_file, map_file, match_file)
+
+        get_high_quality_regions(map_file, match_file, chrom, filtered_match_file, self.__config["exclude_regions"])
+        plot_hits(map_file, match_file, chrom, filtered_match_file, output_png)
+
+        self.__temp_manager.purge()
 
 
 def get_files_from_dir(dir_addr, post_fix):
