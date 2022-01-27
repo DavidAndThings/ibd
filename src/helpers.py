@@ -198,7 +198,7 @@ def shapeit_phase(config):
 
     subprocess.run(
         [
-            "./shapit", "--input-bed", 
+            "shapit", "--input-bed", 
             "{}\s{}\s{}".format(config["bed"], config["bim"], config["fam"]),
             "--input-map", config["genetic_map"], 
             "--output-max", "{}\s{}".format(config["output_haps"], config["output_sample"])
