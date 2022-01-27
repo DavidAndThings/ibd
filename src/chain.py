@@ -7,6 +7,7 @@ from os.path import isfile, join
 from cluster import run_infomap
 import json
 from shapeit import ShapeIt
+from to_ilash import deploy_to_ilash, SingleChromToIlash
 
 
 class CommandHandler(ABC):
@@ -145,4 +146,28 @@ class ShapeItHandler(CommandHandler):
         
         elif self.has_next():
             
+            self.get_next().handle(request)
+
+
+class ToIlashHandler(CommandHandler):
+
+    def handle(self, request):
+
+        if request.tool == "toilash":
+
+            with open(request.config) as config_file:
+
+                config_data = json.load(config_file)
+                
+                if request.type == "single":
+
+                    job = SingleChromToIlash(config_data["toilash_single"])
+                    job.run()
+
+                elif request.type == "multiple":
+                    
+                    deploy_to_ilash(config_data["toilash_multiple"])
+        
+        elif self.has_next():
+
             self.get_next().handle(request)

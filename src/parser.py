@@ -39,12 +39,19 @@ def build_parser():
         files from the SHAPEIT software as input.
     ''')
 
+    toilash_parser = subparsers.add_parser("toilash", help='''
+        Tool to detect shared ibd regions amoung genotyped samples. This tool uses the plink 
+        genotype file format as input and outputs a .match file matching each chromosome for 
+        which an input is available.
+    ''')
+
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
     build_qc_parser(qc_parser)
     build_graph_parser(graph_parser)
     build_infomap_parser(infomap_parser)
     build_shapeit_parser(shapeit_parser)
+    build_toilash_parser(toilash_parser)
 
     return master_parser
 
@@ -171,6 +178,29 @@ def build_shapeit_parser(shapeit_parser):
     shapeit_parser.add_argument(
         "--config", "-c", type=str, required=True,
         help='''
-            Path to a config file which specifies all dependency and output paths.
+            Path to a config file which specifies all dependencies and output paths.
         '''
     )
+
+def build_toilash_parser(toilash_parser):
+
+    subparsers = toilash_parser.add_subparsers(dest="type", title="Run on single or multiple chromosomes.")
+
+    single_parser = subparsers.add_parser("single", help="Run on a single chromosome.")
+    
+    single_parser.add_argument(
+        "--config", "-c", type=str, required=True, metavar="path",
+        help='''
+            Path to a .json file which specifies all dependencies and output paths.
+        '''
+    )
+
+    multiple_parser = subparsers.add_parser("multiple", help="Run on multiple chromosome.")
+
+    multiple_parser.add_argument(
+        "--config", "-c", type=str, required=True, metavar="path",
+        help='''
+            Path to a .json file which specifies all dependencies and output paths.
+        '''
+    )
+

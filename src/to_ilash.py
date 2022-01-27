@@ -12,7 +12,7 @@ def deploy_to_ilash(config):
 
     for i in range(int(config["threads"])):
 
-        job = ToIlashJob[config]
+        job = ToIlashJob(config, i)
         job.start()
 
 
@@ -22,10 +22,11 @@ class ToIlashJob(Thread):
 
     # The config argument has the same format as that of the config arg in
     # the JobManager class
-    def __init__(self, config):
+    def __init__(self, config, id):
 
         super().__init__()
-        
+
+        self.threadID = id
         self.__job_manager = JobManager(config)
         self.__job_manager.split_config()
 
