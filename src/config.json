@@ -1,8 +1,22 @@
 {
-    "haps_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
-    "sample_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
-    "dist_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/genetic_maps",
-    "identified_regions": "/sc/arion/projects/ipm2/for_roohy/exclude_regions_hg19.txt",
-    "exclude_samples": "/sc/arion/projects/rg_kennye02/wangx36/consensus_data/david/GSA_KING_kinship.2nddeg.to.remove.txt",
-    "output_dir": "test"
+    "shapeit": {
+        "haps_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
+        "sample_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
+        "dist_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/genetic_maps",
+        "identified_regions": "/sc/arion/projects/ipm2/for_roohy/exclude_regions_hg19.txt",
+        "exclude_samples": "/sc/arion/projects/rg_kennye02/wangx36/consensus_data/david/GSA_KING_kinship.2nddeg.to.remove.txt",
+        "output_dir": "test"
+    },
+    
+    "toilash_multiple": {
+        "bed_dir": "/sc/arion/projects/rg_kennye02/wangx36/ibd_plink/split",
+        "bim_dir": "/sc/arion/projects/rg_kennye02/wangx36/ibd_plink/split",
+        "fam_dir": "/sc/arion/projects/rg_kennye02/wangx36/ibd_plink/split",
+        "genetic_map_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/genetic_maps",
+        "exclude_regions": "/sc/arion/projects/ipm2/for_roohy/exclude_regions_hg19.txt",
+        "output_dir": "output/toilash_multiple",
+        "job_name": "TPG_GSA_combined",
+        "threads": 3
+    }
+
 }
