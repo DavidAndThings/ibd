@@ -201,6 +201,6 @@ def shapeit_phase(config):
             "./shapeit", "--input-bed", 
             config["bed"], config["bim"], config["fam"],
             "--input-map", config["genetic_map"], 
-            "--output-max", "{}\s{}".format(config["output_haps"], config["output_sample"])
+            "--output-max", config["output_haps"], config["output_sample"]
         ], check=True
     )
