@@ -83,6 +83,8 @@ class JobManager:
                 "output_png": "{}/{}_chr{}.png".format(self.__config["output_dir"], self.__config["job_name"], chrom)
             }
 
+            print(config)
+
             self.__chrom_configs.append(config)
     
     def pick_job(self):
