@@ -10,10 +10,18 @@ from threading import Thread, Lock
 # for the ToIlashJob class plus one extra field: threads
 def deploy_to_ilash(config):
 
+    threads = []
+
     for i in range(int(config["threads"])):
 
         job = ToIlashJob(config, i)
         job.start()
+        threads.append(job)
+    
+    for t in threads:
+        t.join()
+    
+    print("Finished all jobs :)")
 
 
 class ToIlashJob(Thread):
