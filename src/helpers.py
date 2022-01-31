@@ -200,7 +200,7 @@ def shapeit_phase(config):
         [
             "./shapeit", "--input-bed", 
             config["bed"], config["bim"], config["fam"],
-            "--input-map", config["genetic_map"], 
+            "--input-map", config["genetic_map"], "--thread", "10", 
             "--output-max", config["output_haps"], config["output_sample"]
         ], check=True
     )
