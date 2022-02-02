@@ -17,6 +17,16 @@
         "output_dir": "output/toilash_multiple",
         "job_name": "TPG_GSA_combined",
         "threads": 3
+    },
+
+    "phased_toilash": {
+        "haps_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
+        "sample_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/phased_data",
+        "genetic_map_dir": "/sc/private/regen/IPM-general/Kenny_Lab/IBD_pipeline/data/genetic_maps",
+        "exclude_regions": "/sc/arion/projects/ipm2/for_roohy/exclude_regions_hg19.txt",
+        "output_dir": "output/phased_toilash",
+        "job_name": "TPG_GSA_combined",
+        "threads": 10
     }
 
 }

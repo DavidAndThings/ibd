@@ -45,6 +45,12 @@ def build_parser():
         which an input is available.
     ''')
 
+    phased_toilash_parser = subparsers.add_parser("phased_toilash", help='''
+        Tool to detect shared ibd regions amoung genotyped samples. This tool uses the phased 
+        genotype file format as input and outputs a .match file matching each chromosome for 
+        which an input is available.
+    ''')
+
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
     build_qc_parser(qc_parser)
@@ -52,6 +58,7 @@ def build_parser():
     build_infomap_parser(infomap_parser)
     build_shapeit_parser(shapeit_parser)
     build_toilash_parser(toilash_parser)
+    build_phased_toilash_parser(phased_toilash_parser)
 
     return master_parser
 
@@ -204,3 +211,12 @@ def build_toilash_parser(toilash_parser):
         '''
     )
 
+
+def build_phased_toilash_parser(phased_toilash_parser):
+
+    phased_toilash_parser.add_argument(
+        "--config", "-c", type=str, required=True, metavar="path",
+        help='''
+        Path to a .json file which specifies all dependencies and output paths
+        '''
+    )

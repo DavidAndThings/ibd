@@ -8,6 +8,7 @@ from cluster import run_infomap
 import json
 from shapeit import ShapeIt
 from to_ilash import deploy_to_ilash, SingleChromToIlash
+from phased_toilash import deploy_phased_toilash
 
 
 class CommandHandler(ABC):
@@ -167,6 +168,22 @@ class ToIlashHandler(CommandHandler):
                 elif request.type == "multiple":
                     
                     deploy_to_ilash(config_data["toilash_multiple"])
+        
+        elif self.has_next():
+
+            self.get_next().handle(request)
+
+
+class PhasedToIlashHandler(CommandHandler):
+
+    def handle(self, request):
+
+        if request.tool == "phased_toilash":
+
+            with open(request.config) as config_file:
+                
+                config_data = json.load(config_file)
+                deploy_phased_toilash(config_data["phased_toilash"])
         
         elif self.has_next():
 
