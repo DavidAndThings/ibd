@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm, trange
 import subprocess
+from os import listdir
+from os.path import isfile, join
+import re
 
 
 class TempFileManager:
@@ -204,3 +207,20 @@ def shapeit_phase(config):
             "--output-max", config["output_haps"], config["output_sample"]
         ], check=True
     )
+
+
+def get_files_from_dir(dir_addr, post_fix):
+
+    all_files = [
+        join(dir_addr, f) for f in listdir(dir_addr) 
+        if isfile(join(dir_addr, f)) and f.endswith(post_fix)
+    ]
+
+    files_dir = {}
+    
+    for i in  all_files:
+        
+        chrom = re.match(".+chr([0-9]{1,2}).+", i).group(1)
+        files_dir[chrom] = i
+    
+    return files_dir

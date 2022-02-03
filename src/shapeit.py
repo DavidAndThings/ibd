@@ -1,7 +1,4 @@
 from helpers import *
-from os import listdir
-from os.path import isfile, join
-import re
 from qc import get_high_quality_regions, plot_hits
 from tqdm import tqdm
 from graph import FileSampleGraph, build_graph_from_file, filter_sample_graph
@@ -80,20 +77,3 @@ class ShapeIt:
         plot_hits(map_file, match_file, chrom, filtered_match_file, self.__output_dir + "/qc_hit_plot_chr{}.png".format(chrom))
 
         return filtered_match_file
-
-
-def get_files_from_dir(dir_addr, post_fix):
-
-    all_files = [
-        join(dir_addr, f) for f in listdir(dir_addr) 
-        if isfile(join(dir_addr, f)) and f.endswith(post_fix)
-    ]
-
-    files_dir = {}
-    
-    for i in  all_files:
-        
-        chrom = re.match(".+chr([0-9]{1,2}).+", i).group(1)
-        files_dir[chrom] = i
-    
-    return files_dir

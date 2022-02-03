@@ -1,8 +1,5 @@
 from helpers import *
-from os import listdir
-from os.path import isfile, join
 from qc import get_high_quality_regions, plot_hits
-import re
 from threading import Thread, Lock
 
 
@@ -133,20 +130,3 @@ def phased_toilash_split_config(config):
         configs.append(chrom_config)
         
     return configs
-
-
-def get_files_from_dir(dir_addr, post_fix):
-
-    all_files = [
-        join(dir_addr, f) for f in listdir(dir_addr) 
-        if isfile(join(dir_addr, f)) and f.endswith(post_fix)
-    ]
-
-    files_dir = {}
-    
-    for i in  all_files:
-        
-        chrom = re.match(".+chr([0-9]{1,2}).+", i).group(1)
-        files_dir[chrom] = i
-    
-    return files_dir
