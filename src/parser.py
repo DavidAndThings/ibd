@@ -51,6 +51,12 @@ def build_parser():
         which an input is available.
     ''')
 
+    to_infomap_parser = subparsers.add_parser("to_infomap", help='''
+        Tool to cluster a set of genotyped samples using shared ibd regions. The tool uses the 
+        .match files from all autosomes and outputs a .cls file with each row a sample id and an
+        integer representing the cluster to which the sample was assigned.
+    ''')
+
     build_convert_parser(convert_parser)
     build_ilash_parser(ilash_parser)
     build_qc_parser(qc_parser)
@@ -59,6 +65,7 @@ def build_parser():
     build_shapeit_parser(shapeit_parser)
     build_toilash_parser(toilash_parser)
     build_phased_toilash_parser(phased_toilash_parser)
+    build_to_infomap_parser(to_infomap_parser)
 
     return master_parser
 
@@ -217,6 +224,35 @@ def build_phased_toilash_parser(phased_toilash_parser):
     phased_toilash_parser.add_argument(
         "--config", "-c", type=str, required=True, metavar="path",
         help='''
-        Path to a .json file which specifies all dependencies and output paths
+        Path to a .json file which follows the following format:
+            {
+                "phased_toilash": {
+                    "haps_dir": "Path to a directory which contains SHAPEIT .haps files.",
+                    "sample_dir": "Path to a directory which contains SHAPEIT .sample files.",
+                    "genetic_map_dir": "Path to a directory which contains SHAPEIT .txt genetic map files",
+                    "exclude_regions": "Path to a file which contains a set of predefined regions to exclude from identified ibd regions",
+                    "output_dir": "Directory in which the output files and graphs are placed."
+                    "job_name": "A string naming the current job. This name will be included in all output files.
+                    "threads": "The number of threads to use when executing the job."
+                }
+            }
+        '''
+    )
+
+
+def build_to_infomap_parser(to_infomap_parser):
+
+    to_infomap_parser.add_argument(
+        "--config", "-c", type=str, required=True, metavar="path",
+        help='''
+        Path to a .json file which follows the following format:
+            {
+                "to_infomap": {
+                    "match_dir": "Path to a directory which contains ilash output .match files.",
+                    "exclude_samples": "Path to a list including the samples to exclude from the analysis.",
+                    "output_dir": "The directory in which the output files will be placed.",
+                    "job_name": "The name of the current job. This string will be included in all output files produced by this pipeline."
+                }
+            }
         '''
     )

@@ -27,6 +27,13 @@
         "output_dir": "output/phased_toilash",
         "job_name": "TPG_GSA_combined",
         "threads": 10
+    },
+
+    "to_infomap": {
+        "match_dir": "output/phased_toilash",
+        "exclude_samples": "/sc/arion/projects/rg_kennye02/wangx36/consensus_data/david/GSA_KING_kinship.2nddeg.to.remove.txt",
+        "output_dir": "output",
+        "job_name": "TPG_GSA_combined"
     }
 
 }

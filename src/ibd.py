@@ -16,6 +16,7 @@ if __name__ == '__main__':
     shapeit_handler = ShapeItHandler()
     toilash_handler = ToIlashHandler()
     phased_toilash_handler = PhasedToIlashHandler()
+    to_infomap_handler = ToInfomap()
 
     sample_conv.set_next(haps_conv)
     haps_conv.set_next(ilash_run)
@@ -26,6 +27,7 @@ if __name__ == '__main__':
     infomap_handler.set_next(shapeit_handler)
     shapeit_handler.set_next(toilash_handler)
     toilash_handler.set_next(phased_toilash_handler)
+    phased_toilash_handler.set_next(to_infomap_handler)
 
     args = p.parse_args()
     sample_conv.handle(args)

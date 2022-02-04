@@ -11,13 +11,14 @@ class ToInfomap:
         self.__matches = get_files_from_dir(config["match_dir"], ".haps")
         self.__exclude_samples = config["exclude_samples"]
         self.__output_dir = config["output_dir"]
+        self.__job_name = config["job_name"]
         self.__temp_manager = TempFileManager()
     
     def run(self):
         
         sample_ibd_graph = self.build_sample_ibd_graph()
         filtered_ibd_graph = self.filter_sample_ibd_graph(sample_ibd_graph)
-        run_infomap(filtered_ibd_graph, self.__output_dir + "/sample_cluster.txt")
+        run_infomap(filtered_ibd_graph, "{}/{}_infomap_cluster.cls".format(self.__output_dir, self.__job_name))
         self.__temp_manager.purge()
 
     def filter_sample_ibd_graph(self, ibd_graph_addr):

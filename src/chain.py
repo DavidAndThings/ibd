@@ -9,6 +9,7 @@ import json
 from shapeit import ShapeIt
 from to_ilash import deploy_to_ilash, SingleChromToIlash
 from phased_toilash import deploy_phased_toilash
+from to_infomap import ToInfomap
 
 
 class CommandHandler(ABC):
@@ -188,3 +189,21 @@ class PhasedToIlashHandler(CommandHandler):
         elif self.has_next():
 
             self.get_next().handle(request)
+
+
+class ToInfomapHandler(CommandHandler):
+
+    def handle(self, request):
+
+        if request.tool == "to_infomap":
+
+            with open(request.config) as config_file:
+
+                config_data = json.load(config_file)
+                job = ToInfomap(config_data)
+                job.run()
+        
+        elif self.has_next():
+
+            self.get_next().handle(request)
+
