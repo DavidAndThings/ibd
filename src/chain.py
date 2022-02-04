@@ -200,6 +200,7 @@ class ToInfomapHandler(CommandHandler):
             with open(request.config) as config_file:
 
                 config_data = json.load(config_file)
+                print(config_data)
                 job = ToInfomap(config_data)
                 job.run()
         

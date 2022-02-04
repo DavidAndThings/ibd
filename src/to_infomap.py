@@ -8,7 +8,7 @@ class ToInfomap:
 
     def __init__(self, config):
         
-        self.__matches = get_files_from_dir(config["match_dir"], ".haps")
+        self.__matches = get_files_from_dir(config["match_dir"], ".match")
         self.__exclude_samples = config["exclude_samples"]
         self.__output_dir = config["output_dir"]
         self.__job_name = config["job_name"]
