@@ -16,7 +16,7 @@ if __name__ == '__main__':
     shapeit_handler = ShapeItHandler()
     toilash_handler = ToIlashHandler()
     phased_toilash_handler = PhasedToIlashHandler()
-    to_infomap_handler = ToInfomap()
+    to_infomap_handler = ToInfomapHandler()
 
     sample_conv.set_next(haps_conv)
     haps_conv.set_next(ilash_run)
